@@ -1,0 +1,6 @@
+# Debug options
+
+# Turn on tracing
+org.eclipse.codewind.openapi.ui/debug/info=false
+org.eclipse.codewind.openapi.ui/debug/warning=false
+org.eclipse.codewind.openapi.ui/debug/error=false
