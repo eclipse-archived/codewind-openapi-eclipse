@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Codewind OpenAPI Tools Core
+Bundle-SymbolicName: org.eclipse.codewind.openapi.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.codewind.openapi.core.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.codewind.openapi.core
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: IBM
+Bundle-ClassPath: .,
+ lib/openapi-generator-cli-4.0.1.jar,
+ lib/org.json_1.0.0.v201011060100.jar
+Export-Package: org.eclipse.codewind.openapi.core,
+ org.eclipse.codewind.openapi.core.commands;x-friends:="org.eclipse.codewind.openapi.ui",
+ org.eclipse.codewind.openapi.core.util;x-friends:="org.eclipse.codewind.openapi.ui"
+Import-Package: org.eclipse.jdt.launching
