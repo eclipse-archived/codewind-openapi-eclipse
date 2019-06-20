@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.core.expressions.propertyTesters">   
+		<propertyTester
+      		id="org.eclipse.codewind.openapi.ui.util.OpenApiToolsPropertyTester"
+      		type="org.eclipse.core.resources.IResource"
+      		namespace="org.eclipse.codewind.openapi.ui"
+      		properties="validSelection"
+      		class="org.eclipse.codewind.openapi.ui.util.OpenApiToolsPropertyTester">
+    	</propertyTester>
+       	<propertyTester
+      		id="org.eclipse.codewind.openapi.ui.OpenApiToolsPropertyTesterCodewinApp"
+      		type="org.eclipse.codewind.core.internal.CodewindApplication"
+      		namespace="org.eclipse.codewind.openapi.ui"
+      		properties="isImported"
+      		class="org.eclipse.codewind.openapi.ui.util.OpenApiToolsPropertyTester">
+    	</propertyTester>    	
+       	<propertyTester
+      		id="org.eclipse.codewind.openapi.ui.OpenApiToolsPropertyTesterResource"
+      		type="org.eclipse.core.resources.IResource"
+      		namespace="org.eclipse.codewind.openapi.ui"
+      		properties="isImported"
+      		class="org.eclipse.codewind.openapi.ui.util.OpenApiToolsPropertyTester">
+    	</propertyTester>    	
+    </extension>
+    
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.codewind.openapi.ui.commands.category"
+            name="%OPENAPI_TOOLS">
+      </category>
+      <command
+            categoryId="org.eclipse.codewind.openapi.ui.commands.category"
+            name="%CLIENT_API_STUB"
+            id="org.eclipse.codewind.openapi.ui.commands.clientCommand">
+      </command>
+      <command
+            categoryId="org.eclipse.codewind.openapi.ui.commands.category"
+            name="%SERVER_API_STUB"
+            id="org.eclipse.codewind.openapi.ui.commands.serverCommand">
+      </command>
+      <command
+            categoryId="org.eclipse.codewind.openapi.ui.commands.category"
+            name="%HTML_DOCUMENTATION"
+            id="org.eclipse.codewind.openapi.ui.commands.htmlCommand">
+      </command>
+   </extension>
+   <extension
+		point="org.eclipse.ui.handlers">
+      	<handler
+      		class="org.eclipse.codewind.openapi.ui.handlers.GenerateClientCommandHandler"
+        	commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand">
+			<enabledWhen>
+				<with variable="activeMenuSelection">   
+			    	<count value="1"/>
+			    	<or>
+			        	<iterate>
+			            	<adapt type="org.eclipse.codewind.core.internal.CodewindApplication">
+			            		<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			        	<iterate>
+			            	<adapt type="org.eclipse.core.resources.IResource">
+			                	<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			    	</or>
+			    </with>
+			</enabledWhen>
+       </handler>
+      <handler
+            class="org.eclipse.codewind.openapi.ui.handlers.GenerateServerCommandHandler"
+            commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand">
+			<enabledWhen>
+				<with variable="activeMenuSelection">   
+			    	<count value="1"/>
+			    	<or>
+			        	<iterate>
+			            	<adapt type="org.eclipse.codewind.core.internal.CodewindApplication">
+			            		<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			        	<iterate>
+			            	<adapt type="org.eclipse.core.resources.IResource">
+			                	<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			    	</or>
+			    </with>
+			</enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.codewind.openapi.ui.handlers.GenerateHtmlCommandHandler"
+            commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand">
+			<enabledWhen>
+				<with variable="activeMenuSelection">   
+			    	<count value="1"/>
+			    	<or>
+			        	<iterate>
+			            	<adapt type="org.eclipse.codewind.core.internal.CodewindApplication">
+			            		<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			        	<iterate>
+			            	<adapt type="org.eclipse.core.resources.IResource">
+			                	<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.isImported" value="true"/>
+			            	</adapt>
+			        	</iterate>
+			    	</or>
+			    </with>
+			</enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+1">
+      </key>
+      <key
+            commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+2">
+      </key>
+      <key
+            commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+4">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.codewind.ui.explorerView?before=additions">
+         <separator
+         	visible="true">
+     	 </separator>    
+         <menu
+               id="org.eclipse.codewind.openapi.ui.codewindExplorerViewMenu"
+               label="%OPENAPI_MENU_GROUP">
+            <command
+                  id="org.eclipse.codewind.openapi.ui.codewindExplorerView.clientCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
+                  tooltip="%CREATE_CLIENT_DESCRIPTION">
+            	<visibleWhen>
+               		<with variable="selection">
+               		<count value="1"/>
+                  	  <iterate>
+                     	<adapt
+                           type="org.eclipse.codewind.core.internal.CodewindApplication">
+                     	</adapt>
+                  	  </iterate>
+               		</with>
+            	</visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.codewindExplorerView.serverCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand"
+                  tooltip="%CREATE_SERVER_DESCRIPTION">
+            <visibleWhen>
+               <with
+                     variable="selection">
+                  <count value="1"/>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.codewind.core.internal.CodewindApplication">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.codewindExplorerView.htmlCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand"
+                  tooltip="%CREATE_HTML_DESCRIPTION">
+            <visibleWhen>
+               <with
+                  variable="selection">
+                  <count value="1"/>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.codewind.core.internal.CodewindApplication">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+         <menu
+         	id="org.eclipse.codewind.openapi.ui.packageExplorerMenu"
+               label="%OPENAPI_MENU_GROUP">
+            <command
+                  id="org.eclipse.codewind.openapi.ui.packageExplorer.clientCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
+                  tooltip="%CREATE_CLIENT_DESCRIPTION">
+            	<visibleWhen>
+           			<with variable="selection">
+           			  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IProject">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+           			</with>
+            	</visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>  
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+         <menu
+         	id="org.eclipse.codewind.openapi.ui.projectExplorerMenu"
+               label="%OPENAPI_MENU_GROUP">
+            <command
+                  id="org.eclipse.codewind.openapi.ui.projectExplorer.clientCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
+                  tooltip="%CREATE_CLIENT_DESCRIPTION">
+            	<visibleWhen>
+           			<with variable="activeMenuSelection">
+           			  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IResource">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+           			</with>
+            	</visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.projectExplorer.serverCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand"
+                  tooltip="%CREATE_SERVER_DESCRIPTION">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IResource">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+               </with>
+            </visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.projectExplorer.htmlCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand"
+                  tooltip="%CREATE_HTML_DESCRIPTION">
+            <visibleWhen>
+               <with
+                  variable="activeMenuSelection">
+                  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IResource">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+               </with>
+            </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>  
+   </extension>
+<!-- TODO
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            id="org.eclipse.codewind.openapi.ui.wizard.GenerateClientWizard"
+            name="%CLIENT_API_STUB"
+            class="org.eclipse.codewind.openapi.ui.wizard.GenerateClientWizard"
+            category="org.eclipse.codewind.ui.new">
+            <description>%CREATE_CLIENT_DESCRIPTION</description>
+			<selection
+            	class="org.eclipse.core.resources.IProject">
+        	</selection>
+      </wizard>
+   </extension> -->
+</plugin>
