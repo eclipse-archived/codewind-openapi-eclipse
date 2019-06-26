@@ -39,8 +39,14 @@ pipeline {
                   println("Deploying codewind-openapi-eclipse to downoad area...")
                   
                   sh '''
-                  	ssh genie.codewind@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${GIT_BRANCH}/${BUILD_ID}
-                  	scp -r ${WORKSPACE}/dev/ant_build/artifacts/* genie.codewind@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${GIT_BRANCH}/${BUILD_ID}
+                    if [ -z $CHANGE_ID ]; then
+    					UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
+					else
+    					UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
+					fi
+ 
+                  	ssh genie.codewind@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
+                  	scp -r ${WORKSPACE}/dev/ant_build/artifacts/* genie.codewind@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
                   '''
                 }
             }
