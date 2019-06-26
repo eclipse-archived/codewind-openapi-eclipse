@@ -23,5 +23,4 @@ The Codewind OpenAPI Tools for Eclipse includes wizards that invoke the OpenAPI 
 - Generate HTML documentation from an OpenAPI Specification file.
 
 ## Contributing
-Submit issues:
-- [Submitting issues](https://github.com/eclipse/codewind-openapi-eclipse/issues)
+[Submitting issues](https://github.com/eclipse/codewind-openapi-eclipse/issues)
