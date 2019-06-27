@@ -47,6 +47,12 @@ pipeline {
  
                   	ssh genie.codewind@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
                   	scp -r ${WORKSPACE}/dev/ant_build/artifacts/* genie.codewind@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
+
+                  	if [[-z $CHANGE_ID] && [“$GIT_BRANCH” == “master”]]; then
+                  		ssh genie.codewind@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/master/latest
+                  		ssh genie.codewind@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/master/latest
+                  		scp -r ${WORKSPACE}/dev/ant_build/artifacts/* genie.codewind@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/master/latest
+					fi
                   '''
                 }
             }
