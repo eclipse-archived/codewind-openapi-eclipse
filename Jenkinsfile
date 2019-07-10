@@ -49,7 +49,8 @@ pipeline {
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
 		      fi
- 
+ 		      
+		      ssh genie.codewind@projects-storage.eclipse.org rm -rf /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
                       ssh genie.codewind@projects-storage.eclipse.org mkdir -p /home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
                       scp -r ${WORKSPACE}/dev/ant_build/artifacts/* genie.codewind@projects-storage.eclipse.org:/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}
 
