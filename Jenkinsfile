@@ -41,7 +41,7 @@ pipeline {
                   sh '''
                     export REPO_NAME="codewind-openapi-eclipse"
                     export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
-                    export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME/"
+                    export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME"
                     export LATEST_DIR="latest"
                   
                       export sshHost="genie.codewind@projects-storage.eclipse.org"
@@ -57,7 +57,7 @@ pipeline {
     			  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR/$REPO_NAME.zip
                    		
                   echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
-                  sha256sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
+                  sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
                   
                   rm $OUTPUT_DIR/$REPO_NAME.zip
                   	  
@@ -66,16 +66,19 @@ pipeline {
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
     			  BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
                   
-                  ssh $sshHost rm -rf $deployDir/$UPLOAD_DIR/$LATEST_DIR
-                  ssh $sshHost mkdir -p $deployDir/$UPLOAD_DIR/$LATEST_DIR
+                  ssh $sshHost rm -rf $deployDir/pr/$CHANGE_ID/$LATEST_DIR
+                  ssh $sshHost mkdir -p $deployDir/pr/$CHANGE_ID/$LATEST_DIR
                   cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
-                  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$UPLOAD_DIR/$LATEST_DIR/$REPO_NAME.zip
+                  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR/$REPO_NAME.zip
                   
+                  echo "Build Url :" >> $OUTPUT_DIR/build.info
                   echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
-                  sha256sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR//build.info
+                  echo "" >> $OUTPUT_DIR/build.info
+                  
+                  echo "SHA-1 :" >> $OUTPUT_DIR/build.info
+                  sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
                   
                   rm $OUTPUT_DIR/$REPO_NAME.zip      
-                      
                   unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
 		      fi
  		      
