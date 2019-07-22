@@ -51,12 +51,15 @@ pipeline {
                   	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
+    			  
+    			  # Remove this block before merge
+                  	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
+				  # End Remove this block before merge
 		      fi
  		      
 		      ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
                       ssh $sshHost mkdir -p $deployDir/${UPLOAD_DIR}
                       scp -r ${WORKSPACE}/dev/ant_build/artifacts/* $sshHost:$deployDir/${UPLOAD_DIR}
-
                   '''
                 }
             }
