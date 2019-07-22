@@ -44,11 +44,11 @@ pipeline {
 
                       if [ -z $CHANGE_ID ]; then
 		          UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
-    			  unzip ${WORKSPACE}/dev/ant_build/artifacts/codewind*.zip -d ${WORKSPACE}/dev/ant_build/artifacts/repository
+    			  unzip ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip -d ${WORKSPACE}/dev/ant_build/artifacts/repository/codewind
  		
                   	  ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/latest
                   	  ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/latest
-                  	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/* $sshHost:$deployDir/$GIT_BRANCH/latest
+                  	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
 		      fi
