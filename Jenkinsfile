@@ -37,46 +37,50 @@ pipeline {
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                   println("Deploying codewind-openapi-eclipse to downoad area...")
+                  REPO_NAME="codewind-openapi-eclipse"
+                  OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
+                  DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME/"
+                  LATEST_DIR="latest"
                   
                   sh '''
                       export sshHost="genie.codewind@projects-storage.eclipse.org"
-                      export deployDir="/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse"
+                      export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
 
                       if [ -z $CHANGE_ID ]; then
 		          UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
-		          BUILD_URL="https://download.eclipse.org/codewind/codewind-openapi-eclipse/$UPLOAD_DIR"
+		          BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
 		          
-		          ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/latest
-                  ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/latest
-    			  cp $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip
-    			  scp $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
+		          ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/$LATEST_DIR
+                  ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/$LATEST_DIR
+    			  cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
+    			  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR/$REPO_NAME.zip
                    		
-                  echo "$BUILD_URL" >> $WORKSPACE/dev/ant_build/artifacts//build.info
-                  sha256sum $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip >> $WORKSPACE/dev/ant_build/artifacts//build.info
+                  echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
+                  sha256sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
                   
-                  rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip
+                  rm $OUTPUT_DIR/$REPO_NAME.zip
                   	  
-    			  unzip $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip -d $WORKSPACE/dev/ant_build/artifacts/repository/codewind
+    			  unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
-                  BUILD_URL="https://download.eclipse.org/codewind/codewind-openapi-eclipse/$UPLOAD_DIR"
+    			  BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
                   
-                  ssh $sshHost rm -rf $deployDir/$UPLOAD_DIR/latest
-                  ssh $sshHost mkdir -p $deployDir/$UPLOAD_DIR/latest
-                  cp $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip
-                  scp $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
+                  ssh $sshHost rm -rf $deployDir/$UPLOAD_DIR/$LATEST_DIR
+                  ssh $sshHost mkdir -p $deployDir/$UPLOAD_DIR/$LATEST_DIR
+                  cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
+                  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$UPLOAD_DIR/$LATEST_DIR/$REPO_NAME.zip
                   
-                  echo "$BUILD_URL" >> $WORKSPACE/dev/ant_build/artifacts//build.info
-                  sha256sum $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip >> $WORKSPACE/dev/ant_build/artifacts//build.info
+                  echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
+                  sha256sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR//build.info
                   
-                  rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse.zip      
+                  rm $OUTPUT_DIR/$REPO_NAME.zip      
                       
-                  unzip $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip -d $WORKSPACE/dev/ant_build/artifacts/repository/codewind
+                  unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
 		      fi
  		      
 		      ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
                       ssh $sshHost mkdir -p $deployDir/${UPLOAD_DIR}
-                      scp -r $WORKSPACE/dev/ant_build/artifacts/* $sshHost:$deployDir/${UPLOAD_DIR}
+                      scp -r $OUTPUT_DIR/* $sshHost:$deployDir/${UPLOAD_DIR}
 
                   '''
                 }
