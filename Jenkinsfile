@@ -37,12 +37,13 @@ pipeline {
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                   println("Deploying codewind-openapi-eclipse to downoad area...")
-                  REPO_NAME="codewind-openapi-eclipse"
-                  OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
-                  DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME/"
-                  LATEST_DIR="latest"
                   
                   sh '''
+                    export REPO_NAME="codewind-openapi-eclipse"
+                    export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
+                    export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME/"
+                    export LATEST_DIR="latest"
+                  
                       export sshHost="genie.codewind@projects-storage.eclipse.org"
                       export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
 
