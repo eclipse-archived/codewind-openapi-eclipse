@@ -70,26 +70,8 @@ pipeline {
                   rm -rf $OUTPUT_DIR/repository
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
-    			  BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
-                  
-                  ssh $sshHost rm -rf $deployDir/pr/$CHANGE_ID/$LATEST_DIR
-                  ssh $sshHost mkdir -p $deployDir/pr/$CHANGE_ID/$LATEST_DIR
-                  cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
-                  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR/$REPO_NAME.zip
-                  
-                  echo "# Build Url :" >> $OUTPUT_DIR/$BUILD_INFO
-                  echo "$BUILD_URL" >> $OUTPUT_DIR/$BUILD_INFO
-                  echo "" >> $OUTPUT_DIR/$BUILD_INFO
-                  echo "# SHA-1 :" >> $OUTPUT_DIR/$BUILD_INFO
-                  sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/$BUILD_INFO
-                  
-                  unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
-                  scp -r $OUTPUT_DIR/repository $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR/repository
-                  scp $OUTPUT_DIR/$BUILD_INFO $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR/$BUILD_INFO
-                  rm $OUTPUT_DIR/$BUILD_INFO
-                  rm $OUTPUT_DIR/$REPO_NAME.zip      
-                  rm -rf $OUTPUT_DIR/repository
-		      fi
+                 
+ 		      fi
  		      
 		      ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
                       ssh $sshHost mkdir -p $deployDir/${UPLOAD_DIR}
