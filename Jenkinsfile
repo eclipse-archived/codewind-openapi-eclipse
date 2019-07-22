@@ -42,24 +42,28 @@ pipeline {
                       export sshHost="genie.codewind@projects-storage.eclipse.org"
                       export deployDir="/home/data/httpd/download.eclipse.org/codewind/codewind-openapi-eclipse"
 
-                      if [ -z $CHANGE_ID ]; then
+                      #if [ -z $CHANGE_ID ]; then
+                      if [ -z "" ]; then
 		          UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
+		          BUILD_URL="https://download.eclipse.org/codewind/codewind-openapi-eclipse/${UPLOAD_DIR}"
+		          
+		          ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/latest
+                  ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/latest
+    			  cp ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse.zip
+    			  scp ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
+                  rm ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse.zip 		
+                  
+                  echo "BUILD_URL=$BUILD_URL" >> info.properties
+                  	  
     			  unzip ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip -d ${WORKSPACE}/dev/ant_build/artifacts/repository/codewind
- 		
-                  	  ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/latest
-                  	  ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/latest
-                  	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
-    			  
-    			  # Remove this block before merge
-                  	  scp -r ${WORKSPACE}/dev/ant_build/artifacts/codewind-openapi-eclipse-*.zip $sshHost:$deployDir/$GIT_BRANCH/latest/codewind-openapi-eclipse.zip
-				  # End Remove this block before merge
 		      fi
  		      
 		      ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
                       ssh $sshHost mkdir -p $deployDir/${UPLOAD_DIR}
                       scp -r ${WORKSPACE}/dev/ant_build/artifacts/* $sshHost:$deployDir/${UPLOAD_DIR}
+
                   '''
                 }
             }
