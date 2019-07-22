@@ -56,12 +56,17 @@ pipeline {
     			  cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
     			  scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR/$REPO_NAME.zip
                    		
+                  echo "# Build Url :" >> $OUTPUT_DIR/build.info
                   echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
+                  echo "" >> $OUTPUT_DIR/build.info
+                  echo "# SHA-1 :" >> $OUTPUT_DIR/build.info
                   sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
                   
                   rm $OUTPUT_DIR/$REPO_NAME.zip
                   	  
     			  unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
+    			  
+    			  scp -r $OUTPUT_DIR/* $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR   
 		      else
     			  UPLOAD_DIR="pr/$CHANGE_ID/$BUILD_ID"
     			  BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
@@ -71,15 +76,16 @@ pipeline {
                   cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
                   scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR/$REPO_NAME.zip
                   
-                  echo "Build Url :" >> $OUTPUT_DIR/build.info
+                  echo "# Build Url :" >> $OUTPUT_DIR/build.info
                   echo "$BUILD_URL" >> $OUTPUT_DIR/build.info
                   echo "" >> $OUTPUT_DIR/build.info
                   
-                  echo "SHA-1 :" >> $OUTPUT_DIR/build.info
+                  echo "# SHA-1 :" >> $OUTPUT_DIR/build.info
                   sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/build.info
                   
                   rm $OUTPUT_DIR/$REPO_NAME.zip      
                   unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
+                  scp -r $OUTPUT_DIR/* $sshHost:$deployDir/pr/$CHANGE_ID/$LATEST_DIR   
 		      fi
  		      
 		      ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
