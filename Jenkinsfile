@@ -40,10 +40,11 @@ pipeline {
                   
                     sh '''
                         export REPO_NAME="codewind-openapi-eclipse"
+                        export OUTPUT_NAME="codewind-openapi-eclipse"
                         export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
                         export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME"
                         export LATEST_DIR="latest"
-                        export BUILD_INFO="build.info"
+                        export BUILD_INFO="build_info.properties"
                         export sshHost="genie.codewind@projects-storage.eclipse.org"
                         export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
                     
@@ -56,11 +57,9 @@ pipeline {
                             cp $OUTPUT_DIR/$REPO_NAME-*.zip $OUTPUT_DIR/$REPO_NAME.zip
                             scp $OUTPUT_DIR/$REPO_NAME.zip $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR/$REPO_NAME.zip
                         
-                            echo "# Build Url :" >> $OUTPUT_DIR/$BUILD_INFO
-                            echo "$BUILD_URL" >> $OUTPUT_DIR/$BUILD_INFO
-                            echo "" >> $OUTPUT_DIR/$BUILD_INFO
-                            echo "# SHA-1 :" >> $OUTPUT_DIR/$BUILD_INFO
-                            sha1sum $OUTPUT_DIR/$REPO_NAME.zip >> $OUTPUT_DIR/$BUILD_INFO
+                            echo "build_info.url=$BUILD_URL" >> $OUTPUT_DIR/$BUILD_INFO
+                            SHA1=$(sha1sum ${OUTPUT_DIR}/${OUTPUT_NAME}.zip | cut -d ' ' -f 1)
+                            echo "build_info.SHA-1=${SHA1}" >> $OUTPUT_DIR/$BUILD_INFO
                   
                             unzip $OUTPUT_DIR/$REPO_NAME-*.zip -d $OUTPUT_DIR/repository
                             scp -r $OUTPUT_DIR/repository $sshHost:$deployDir/$GIT_BRANCH/$LATEST_DIR/repository
