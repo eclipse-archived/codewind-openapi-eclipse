@@ -115,7 +115,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		projectText.addModifyListener(e -> dialogChanged(e));
 
 		label = new Label(container, SWT.NULL);
-		label.setText(Messages.WIZARD_PAGE_SPECIFICATION);
+		label.setText(Messages.WIZARD_PAGE_DEFINITION);
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -294,7 +294,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus(Messages.WIZARD_PAGE_SELECT_SPEC);
+			updateStatus(Messages.WIZARD_PAGE_SELECT_DEFINITION);
 			return;
 		}
 		if (outputFolder.getText().length() == 0) {
@@ -326,7 +326,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		ElementTreeSelectionDialog ed = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider());
 		ed.setInput(project);
 		ed.setAllowMultiple(false);
-		ed.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_SPEC);
+		ed.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_DEFINITION);
 		ed.addFilter(new ViewerFilter() {			
 			@Override
 			public boolean select(Viewer arg0, Object arg1, Object resource) {
@@ -342,7 +342,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 				return false;
 			}
 		});
-		ed.setTitle(Messages.BROWSE_DIALOG_TITLE_SELECT_SPEC);
+		ed.setTitle(Messages.BROWSE_DIALOG_TITLE_SELECT_DEFINITION);
 		if (ed.open() == ElementTreeSelectionDialog.OK) {
 			Object[] result = ed.getResult();
 			if (result.length == 1) {
