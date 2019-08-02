@@ -62,7 +62,7 @@ public class GenerateHtmlWizardPage extends AbstractGenerateWizardPage {
 		projectText.addModifyListener(e -> dialogChanged());
 
 		label = new Label(container, SWT.NULL);
-		label.setText(Messages.WIZARD_PAGE_SPECIFICATION);
+		label.setText(Messages.WIZARD_PAGE_DEFINITION);
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -157,7 +157,7 @@ public class GenerateHtmlWizardPage extends AbstractGenerateWizardPage {
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus(Messages.WIZARD_PAGE_SELECT_SPEC);
+			updateStatus(Messages.WIZARD_PAGE_SELECT_DEFINITION);
 			return;
 		}
 		if (outputFolder.getText().length() == 0) {
