@@ -16,7 +16,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.codewind.openapi.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.codewind.openapi.ui,
- org.eclipse.codewind.openapi.ui.commands;x-internal:=true,
+ org.eclipse.codewind.openapi.ui.commands;x-friends:="org.eclipse.codewind.openapi.test",
  org.eclipse.codewind.openapi.ui.handlers;x-internal:=true,
  org.eclipse.codewind.openapi.ui.util;x-internal:=true,
  org.eclipse.codewind.openapi.ui.wizard;x-internal:=true

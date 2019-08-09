@@ -39,7 +39,7 @@ public class Constants {
 			"typescript-jquery",
         	"typescript-node"},
 		{"Python", "python"},
-        {"Swift", "swift3", "swift4", "swift2-deprecated"},
+        {"Swift", "swift3-deprecated", "swift4", "swift2-deprecated"},
         {"Ada", "ada"},
         {"Apex", "apex"},
         {"Bash", "bash"},
