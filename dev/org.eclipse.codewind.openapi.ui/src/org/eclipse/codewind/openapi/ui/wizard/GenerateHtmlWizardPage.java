@@ -57,8 +57,9 @@ public class GenerateHtmlWizardPage extends AbstractGenerateWizardPage {
 		Label label = new Label(container, SWT.NULL);
 		label.setText(Messages.WIZARD_PAGE_PROJECT);
 
-		projectText = new Text(container, SWT.BORDER | SWT.SINGLE);
+		projectText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
 		projectText.setLayoutData(gd);
+		projectText.setEnabled(true);
 		projectText.addModifyListener(e -> dialogChanged());
 
 		label = new Label(container, SWT.NULL);

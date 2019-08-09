@@ -111,7 +111,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 
 		projectText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
 		projectText.setLayoutData(gd);
-		projectText.setEnabled(false);
+		projectText.setEnabled(true);
 		projectText.addModifyListener(e -> dialogChanged(e));
 
 		label = new Label(container, SWT.NULL);
