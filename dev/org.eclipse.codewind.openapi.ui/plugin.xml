@@ -203,15 +203,47 @@
                   commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
                   tooltip="%CREATE_CLIENT_DESCRIPTION">
             	<visibleWhen>
-           			<with variable="selection">
+           			<with variable="activeMenuSelection">
            			  <count value="1"/>
               		  <iterate>
-              		     <adapt type="org.eclipse.core.resources.IProject">
+              		     <adapt type="org.eclipse.core.resources.IResource">
 		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
 			            </adapt>
               	 	  </iterate>
            			</with>
             	</visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.packageExplorer.serverCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand"
+                  tooltip="%CREATE_SERVER_DESCRIPTION">
+            <visibleWhen>
+               <with
+                     variable="activeMenuSelection">
+                  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IResource">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+               </with>
+            </visibleWhen>
+            </command>
+            <command
+                  id="org.eclipse.codewind.openapi.ui.packageExplorer.htmlCommand"
+                  commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand"
+                  tooltip="%CREATE_HTML_DESCRIPTION">
+            <visibleWhen>
+               <with
+                  variable="activeMenuSelection">
+                  <count value="1"/>
+              		  <iterate>
+              		     <adapt type="org.eclipse.core.resources.IResource">
+		    				<test forcePluginActivation="true" property="org.eclipse.codewind.openapi.ui.validSelection" value="true"/>    
+			            </adapt>
+              	 	  </iterate>
+               </with>
+            </visibleWhen>
             </command>
          </menu>
       </menuContribution>  
