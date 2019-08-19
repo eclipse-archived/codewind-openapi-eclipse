@@ -122,13 +122,7 @@ public class GenerateHtmlWizardPage extends AbstractGenerateWizardPage {
 				project = Util.getProject(obj);
 			}
 			if (project != null) {
-				boolean foundInitialSpecification = findSpecificationAtRoot("openapi.yaml"); //$NON-NLS-1$
-				if (!foundInitialSpecification) {
-					foundInitialSpecification = findSpecificationAtRoot("openapi.yml"); //$NON-NLS-1$
-					if (!foundInitialSpecification) {
-						foundInitialSpecification = findSpecificationAtRoot("openapi.json"); //$NON-NLS-1$
-					}
-				}
+				initWithDefinitionAtRoot();
 				projectText.setText(project.getName());
 				outputFolder.setText(project.getFullPath().toString());
 			}
