@@ -23,7 +23,11 @@ public class Constants {
 	
 	public static String CODEWIND_EXPLORER_VIEW = "org.eclipse.codewind.ui.explorerView"; //$NON-NLS-1$
 	public static String HTML_DOCUMENTATION_FILE = "index.html"; //$NON-NLS-1$
-	
+
+	public static String IMG_CLIENT_WIZBAN = "icons/wizban/select_client_wiz.png";
+	public static String IMG_SERVER_WIZBAN = "icons/wizban/select_server_wiz.png";
+	public static String IMG_HTML_WIZBAN = "icons/wizban/html_generator_wiz.png";
+
 	public static String ALL_CLIENT_LANGUAGES[][]  = new String[][] {
 		{ "Go", "go"}, 
 		{ "Java", "java", "jaxrs-cxf-client"},

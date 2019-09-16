@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import org.eclipse.codewind.openapi.ui.util.UILogger;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.osgi.service.debug.DebugOptionsListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -69,7 +70,14 @@ public class Activator extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+		ImageRegistry imageRegistry = plugin.getImageRegistry();
+		ImageDescriptor descriptor = imageRegistry.getDescriptor(path);		
+		if (descriptor == null) {
+			ImageDescriptor imageDescriptorFromPlugin = imageDescriptorFromPlugin(PLUGIN_ID, path);
+			imageRegistry.put(path, imageDescriptorFromPlugin);
+			return imageDescriptorFromPlugin;
+		}
+		return descriptor;
 	}
 	
 	public static void log(int severity, String message) {

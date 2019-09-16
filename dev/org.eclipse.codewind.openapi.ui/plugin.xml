@@ -316,4 +316,22 @@
         	</selection>
       </wizard>
    </extension> -->
+
+	<extension point="org.eclipse.ui.commandImages">
+		<image
+			commandId="org.eclipse.codewind.openapi.ui.commands.clientCommand"
+			hoverIcon="icons/obj16/monitorOn.gif"
+			disabledIcon="icons/obj16/monitorOff.gif"
+			icon="icons/obj16/monitorOn.gif" />
+		<image
+			commandId="org.eclipse.codewind.openapi.ui.commands.serverCommand"
+			hoverIcon="icons/etool16/server_generate.gif"
+			disabledIcon="icons/dtool16/server_generate.gif"
+			icon="icons/etool16/server_generate.gif" />
+		<image
+			commandId="org.eclipse.codewind.openapi.ui.commands.htmlCommand"
+			hoverIcon="icons/etool16/html_generate.gif"
+			disabledIcon="icons/dtool16/html_generate.gif"
+			icon="icons/etool16/html_generate.gif" />
+	</extension>
 </plugin>

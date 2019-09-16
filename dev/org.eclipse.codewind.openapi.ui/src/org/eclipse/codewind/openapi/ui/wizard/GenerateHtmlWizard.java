@@ -31,6 +31,7 @@ public class GenerateHtmlWizard extends AbstractGenerateWizard {
 
 	public GenerateHtmlWizard() {
 		super();
+		setDefaultPageImageDescriptor(Activator.getImageDescriptor(Constants.IMG_HTML_WIZBAN));
 		setNeedsProgressMonitor(true);
 	}
 
