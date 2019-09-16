@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+         <content-type id="org.eclipse.codewind.openapi.core.openApiDocumentJson" name="%openApiContentTypeJson" 
+			base-type="org.eclipse.core.runtime.text"
+			priority="high"		
+			file-extensions="json">
+			<describer class="org.eclipse.codewind.openapi.core.contenttype.OpenApiJsonContentDescriber" />
+		</content-type>
+		<content-type id="org.eclipse.codewind.openapi.core.openApiDocumentYaml" name="%openApiContentTypeYaml" 
+			base-type="org.eclipse.core.runtime.text"
+			priority="high"		
+			file-extensions="yaml,yml">
+			<describer class="org.eclipse.codewind.openapi.core.contenttype.OpenApiYamlContentDescriber" />
+		</content-type>
+   </extension>
+
+</plugin>
