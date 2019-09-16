@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.codewind.openapi.ui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.eclipse.codewind.openapi.ui.util.UILogger;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -71,6 +74,15 @@ public class Activator extends AbstractUIPlugin {
 	
 	public static void log(int severity, String message) {
 		plugin.getLog().log(new Status(severity, PLUGIN_ID, message));
+	}
+	
+	public static void log(int severity, Exception e) {
+		if (UILogger.ERROR) {
+			StringWriter writer = new StringWriter();
+			PrintWriter pw = new PrintWriter(writer);
+			e.printStackTrace(pw);
+			plugin.getLog().log(new Status(severity, PLUGIN_ID, writer.toString()));				
+		}
 	}
 
 }

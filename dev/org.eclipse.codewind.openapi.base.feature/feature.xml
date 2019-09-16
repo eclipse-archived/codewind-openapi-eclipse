@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.codewind.openapi.base.feature"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="1.0.100.qualifier"
       provider-name="%providerName">
 
    <description>

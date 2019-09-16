@@ -39,7 +39,7 @@ public class Messages extends NLS {
 	public static String INFO_INVALID_SELECTION;
 	
 	public static String WIZARD_PAGE_PROJECT;
-	public static String WIZARD_PAGE_SPECIFICATION;
+	public static String WIZARD_PAGE_DEFINITION;
 	public static String WIZARD_PAGE_OUTPUT_FOLDER;
 	public static String WIZARD_PAGE_LANGUAGE;
 	public static String WIZARD_PAGE_GENERATOR_TYPE;
@@ -52,13 +52,13 @@ public class Messages extends NLS {
 	public static String WIZARD_PAGE_PROJECT_NOT_PROVIDED;
 	public static String WIZARD_PAGE_PROJECT_NOT_IMPORTED;
 	public static String WIZARD_PAGE_PROJECT_NOT_ACCESSIBLE;
-	public static String WIZARD_PAGE_SELECT_SPEC;
+	public static String WIZARD_PAGE_SELECT_DEFINITION;
 	public static String WIZARD_PAGE_SELECT_OUTPUT_FOLDER;
 	public static String WIZARD_PAGE_SELECT_LANGUAGE;
 	public static String WIZARD_PAGE_SELECT_GENERATOR_TYPE;
 
-	public static String BROWSE_DIALOG_MESSAGE_SELECT_SPEC;
-	public static String BROWSE_DIALOG_TITLE_SELECT_SPEC;
+	public static String BROWSE_DIALOG_MESSAGE_SELECT_DEFINITION;
+	public static String BROWSE_DIALOG_TITLE_SELECT_DEFINITION;
 	
 	public static String BROWSE_DIALOG_MESSAGE_SELECT_FOLDER;
 	public static String BROWSE_DIALOG_TITLE_SELECT_FOLDER;

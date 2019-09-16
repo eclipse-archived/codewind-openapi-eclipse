@@ -24,23 +24,23 @@ public class GenerateClientWizardPage extends AbstractGenerateWizardPage {
 		setDescription(Messages.CLIENT_WIZARD_PAGE_DESCRIPTION);
 		this.selection = selection;
 	}
-	
+
 	@Override
 	protected void populateGeneratorTypesCombo(String language) {
 		generatorTypes.removeAll();
 		for (int i = 0; i < Constants.ALL_CLIENT_LANGUAGES.length; i++) {
 			if (Constants.ALL_CLIENT_LANGUAGES[i][0].equals(language)) {
 				for (int j = 1; j < Constants.ALL_CLIENT_LANGUAGES[i].length; j++) {
-					generatorTypes.add(Constants.ALL_CLIENT_LANGUAGES[i][j]);						
+					generatorTypes.add(Constants.ALL_CLIENT_LANGUAGES[i][j]);
 				}
 				if (generatorTypes.getItemCount() > 0) {
-					generatorTypes.select(0);										
+					generatorTypes.select(0);
 				}
 				break;
 			}
 		}
 	}
-	
+
 	@Override
 	protected void fillLanguagesCombo() {
 		languages.removeAll();

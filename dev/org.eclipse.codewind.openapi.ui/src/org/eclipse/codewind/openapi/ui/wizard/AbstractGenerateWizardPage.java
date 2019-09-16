@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -111,11 +112,11 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 
 		projectText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
 		projectText.setLayoutData(gd);
-		projectText.setEnabled(false);
+		projectText.setEnabled(true);
 		projectText.addModifyListener(e -> dialogChanged(e));
 
 		label = new Label(container, SWT.NULL);
-		label.setText(Messages.WIZARD_PAGE_SPECIFICATION);
+		label.setText(Messages.WIZARD_PAGE_DEFINITION);
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -153,7 +154,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		label = new Label(container, SWT.NULL);
 		label.setText(Messages.WIZARD_PAGE_LANGUAGE);
 
-		languages = new Combo(container, SWT.SIMPLE | SWT.READ_ONLY);
+		languages = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		languages.setLayoutData(gd);
@@ -163,7 +164,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		label.setText(Messages.WIZARD_PAGE_GENERATOR_TYPE);
 		label.setToolTipText(Messages.WIZARD_PAGE_GENERATOR_TYPE_TOOLTIP);
 
-		generatorTypes = new Combo(container, SWT.SIMPLE| SWT.READ_ONLY);
+		generatorTypes = new Combo(container, SWT.DROP_DOWN | SWT.READ_ONLY);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		generatorTypes.setToolTipText(Messages.WIZARD_PAGE_GENERATOR_TYPE_TOOLTIP);
@@ -193,6 +194,9 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			} else if (obj instanceof IContainer) {
 				IContainer container = (IContainer) obj;
 				project = container.getProject();
+			} else if (obj instanceof IJavaProject) {
+				IJavaProject javaProj = (IJavaProject)obj;
+				project = javaProj.getProject();
 			} else {
 				String possibleLanguage = Util.getProjectLanguage(obj);
 				if (possibleLanguage.length() > 0) {
@@ -201,13 +205,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 				project = Util.getProject(obj);
 			}
 			if (project != null) {
-				boolean foundInitialSpec = findSpecificationAtRoot("openapi.yaml"); //$NON-NLS-1$
-				if (!foundInitialSpec) {
-					foundInitialSpec = findSpecificationAtRoot("openapi.yml"); //$NON-NLS-1$
-					if (!foundInitialSpec) {
-						foundInitialSpec = findSpecificationAtRoot("openapi.json"); //$NON-NLS-1$
-					}
-				}
+				initWithDefinitionAtRoot(); //$NON-NLS-1$
 				projectText.setText(project.getName());
 			}
 		}		
@@ -294,7 +292,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus(Messages.WIZARD_PAGE_SELECT_SPEC);
+			updateStatus(Messages.WIZARD_PAGE_SELECT_DEFINITION);
 			return;
 		}
 		if (outputFolder.getText().length() == 0) {
@@ -326,14 +324,21 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		ElementTreeSelectionDialog ed = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider());
 		ed.setInput(project);
 		ed.setAllowMultiple(false);
-		ed.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_SPEC);
+		ed.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_DEFINITION);
 		ed.addFilter(new ViewerFilter() {			
 			@Override
 			public boolean select(Viewer arg0, Object arg1, Object resource) {
 				if (resource instanceof IFile) {
 					IFile f = (IFile) resource;
 					String fileName = f.getName();
-					if (fileName.toLowerCase().contains("openapi") && (fileName.endsWith(".yaml") || fileName.endsWith(".yml") || fileName.endsWith(".json"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					if ((fileName.endsWith(".yaml") || fileName.endsWith(".yml") || fileName.endsWith(".json")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						&& !fileName.startsWith(".")
+						&& !fileName.toLowerCase().equals("package.json")
+						&& !fileName.toLowerCase().equals("package-lock.json")
+						&& !fileName.toLowerCase().equals("chart.yaml")
+						&& !fileName.toLowerCase().equals("nodemon.json")
+						&& !fileName.toLowerCase().equals("manifest.yml")
+						&& !fileName.toLowerCase().equals("devfile.yaml")) {
 						return true;
 					}
 				} else {
@@ -342,11 +347,12 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 				return false;
 			}
 		});
-		ed.setTitle(Messages.BROWSE_DIALOG_TITLE_SELECT_SPEC);
+		ed.setTitle(Messages.BROWSE_DIALOG_TITLE_SELECT_DEFINITION);
 		if (ed.open() == ElementTreeSelectionDialog.OK) {
 			Object[] result = ed.getResult();
 			if (result.length == 1) {
-				fileText.setText(((IFile)result[0]).getFullPath().toString());
+				preselectedOpenApiFile = (IFile)result[0];
+				fileText.setText(preselectedOpenApiFile.getFullPath().toString());
 			}
 		}
 	}
@@ -383,10 +389,20 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		}
 	}
 	
-	protected boolean findSpecificationAtRoot(String fileName) {
-		IResource spec1 = project.findMember(fileName);
-		if (spec1 != null && spec1.exists() && spec1 instanceof IFile && spec1.isAccessible()) {
-			preselectedOpenApiFile = (IFile)spec1;
+	protected void initWithDefinitionAtRoot() {
+		boolean isFound = checkForDefinition("openapi.yaml");
+		if (!isFound) {
+			isFound = checkForDefinition("openapi.yml");
+			if (!isFound) {
+				isFound = checkForDefinition("openapi.json");
+			}
+		}
+	}
+	
+	protected boolean checkForDefinition(String fileName) {
+		IResource res = project.findMember(fileName);
+		if (res != null && res.exists() && res instanceof IFile && res.isAccessible()) {
+			preselectedOpenApiFile = (IFile)res;
 			fileText.setText(preselectedOpenApiFile.getFullPath().toString());
 			return true;
 		}
