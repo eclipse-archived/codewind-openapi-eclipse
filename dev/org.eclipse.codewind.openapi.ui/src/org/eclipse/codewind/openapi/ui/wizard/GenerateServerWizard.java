@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.codewind.openapi.ui.wizard;
 
+import org.eclipse.codewind.openapi.ui.Activator;
+import org.eclipse.codewind.openapi.ui.Constants;
 import org.eclipse.codewind.openapi.ui.commands.AbstractOpenApiGeneratorCommand;
 import org.eclipse.codewind.openapi.ui.commands.GenerateServerCommand;
 import org.eclipse.core.resources.IProject;
@@ -20,6 +22,7 @@ public class GenerateServerWizard extends AbstractGenerateWizard {
 
 	public GenerateServerWizard() {
 		super();
+		setDefaultPageImageDescriptor(Activator.getImageDescriptor(Constants.IMG_SERVER_WIZBAN));
 		setNeedsProgressMonitor(true);
 	}
 
