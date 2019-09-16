@@ -14,7 +14,6 @@ package org.eclipse.codewind.openapi.ui.util;
 
 import org.eclipse.codewind.openapi.core.util.Util;
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 public class OpenApiToolsPropertyTester extends PropertyTester {
@@ -28,33 +27,15 @@ public class OpenApiToolsPropertyTester extends PropertyTester {
 		if ("isImported".equals(property)) {  //$NON-NLS-1$ // For enablement of menus.  See plugin.xml
 			if (receiver != null) {
 				if (receiver instanceof IProject) {
-					return true;
-				} else if (receiver instanceof IFile) {
-					return isOpenApiFile((IFile) receiver);
+					return ((IProject)receiver).isOpen();
 				}
-				boolean isImported = Util.isImported(receiver);
-				return isImported;
+				return Util.isImported(receiver);
 			}
 		} else if ("validSelection".equals(property)) { //$NON-NLS-1$  // For visibility of menus.  See plugin.xml
-			if (receiver instanceof IFile) {
-				return isOpenApiFile((IFile) receiver);
-			}
 			if (receiver instanceof IProject) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	private boolean isOpenApiFile(IFile file) {
-		String fileName = file.getName();
-		if (fileName.toLowerCase().contains("openapi") //$NON-NLS-1$
-			&& (fileName.endsWith(".yaml")  //$NON-NLS-1$
-				|| fileName.endsWith(".yml")  //$NON-NLS-1$
-				|| fileName.endsWith(".json"))) { //$NON-NLS-1$
-			return true;
-		}
-		return false;
-	}
-
 }

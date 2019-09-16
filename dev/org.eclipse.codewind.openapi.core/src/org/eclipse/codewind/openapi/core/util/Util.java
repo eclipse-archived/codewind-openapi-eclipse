@@ -112,7 +112,7 @@ public class Util {
 				if (object instanceof IPath) {
 					IPath pat = (IPath) object;
 					if (location.toString().equals(pat.toString())){
-						return true;
+						return proj.isAccessible();
 					}
 				}
 			}
