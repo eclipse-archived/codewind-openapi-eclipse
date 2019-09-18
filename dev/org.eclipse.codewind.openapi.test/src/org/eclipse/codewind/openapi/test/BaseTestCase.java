@@ -40,6 +40,11 @@ public class BaseTestCase extends TestCase {
 	protected IContainer outputFolder;
 	protected IFile definitionFile;
 
+	// Configurable options to test and should be overridden
+	protected String newProjectName = "TestProject";
+	protected String sourceDefinition = Constants.PETSTORE_30;
+	protected String targetDefinitionInProject = "petstore.yaml";
+
 	public BaseTestCase() {
 		// Empty
 	}

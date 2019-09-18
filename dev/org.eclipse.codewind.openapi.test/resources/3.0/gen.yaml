@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: Sample Template
+  version: 1.0.0
+  description: GENERATED Open API Sample template
+  termsOfService: ''
+  contact:
+    name: User
+    email: user@localhost.com
+    url: http://localhost/
+  license:
+    name: License
+    url: http://localhost/license.html
+externalDocs:
+  description: Description of APIs
+  url: http://localhost
+servers:
+- url: http://localhost/{version}
+  description: Sample
+  variables:
+    version:
+      enum:
+      - '1.0'
+      - '2.0'
+      default: '1.0'
+- url: https://localhost/
+  description: Secure
+tags:
+- name: getPath
+  description: GENERATED GET path
+- name: putPath
+  description: GENERATED PUT path
+- name: postPath
+  description: GENERATED POST path
+paths:
+  "/getPath/{id}":
+    get:
+      tags:
+      - getPath
+      description: GENERATED GET operation
+      responses:
+        '200':
+          description: Generated HTTP response code
+      parameters:
+      - name: id
+        in: path
+        description: GENERATED query parameter 'id' for GET operation
+        required: true
+        schema:
+          type: string
+  "/putPath/{pathId}":
+    put:
+      tags:
+      - putPath
+      description: GENERATED PUT operation
+      responses:
+        '202':
+          description: GENERATED HTTP response code
+      parameters:
+      - name: pathId
+        in: path
+        description: GENERATED path parameter 'pathID' for PUT operation
+        required: true
+        schema:
+          type: string
+      - name: putRequest
+        in: query
+        description: GENERATED parameter 'request' for PUT operation
+        required: true
+        schema:
+          "$ref": "#/components/schemas/refOperation"
+  "/postPath":
+    post:
+      tags:
+      - postPath
+      description: GENERATED POST operation
+      responses:
+        '100':
+          description: GENERATED HTTP response code
+      parameters:
+      - name: from
+        in: header
+        description: GENERATED header parameter 'from' for POST operation
+        required: true
+        schema:
+          type: string
+      - name: postRequest
+        in: query
+        description: GENERATED parameter 'postRequest' for POST operation
+        required: true
+        schema:
+          "$ref": "#/components/schemas/refOperation"
+components:
+  schemas:
+    refOperation:
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string

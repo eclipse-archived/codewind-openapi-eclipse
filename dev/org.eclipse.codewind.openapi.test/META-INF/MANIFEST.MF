@@ -11,7 +11,8 @@ Require-Bundle: org.junit,
  org.eclipse.ui.ide,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
- org.eclipse.wst.common.project.facet.core
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.codewind.openapi.core
 Bundle-Activator: org.eclipse.codewind.openapi.test.Activator
 Bundle-Vendor: IBM
 Bundle-ActivationPolicy: lazy
