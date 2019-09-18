@@ -23,4 +23,7 @@ public interface IOpenApiConstants {
 	public static final String CODEWIND_PROJECT_LANGUAGE = "projectLanguage"; //$NON-NLS-1$
 	public static final String CODEWIND_GET_ID_METHOD = "getId"; //$NON-NLS-1$
 	public static final String CODEWIND_CW_SETTINGS = ".cw-settings"; //$NON-NLS-1$
+	
+	public static String CONTENTTYPE_YAML = "org.eclipse.codewind.openapi.core.openApiDocumentYaml"; //$NON-NLS-1$
+	public static String CONTENTTYPE_JSON = "org.eclipse.codewind.openapi.core.openApiDocumentJson"; //$NON-NLS-1$
 }

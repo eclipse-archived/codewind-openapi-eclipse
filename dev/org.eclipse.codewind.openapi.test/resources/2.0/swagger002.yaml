@@ -1,0 +1,9 @@
+# Another test but with comments at the top
+# Test for content type
+swagger: "2.0"
+info:
+  title: Test API
+  description: Test API
+  version: "1.0.0"
+# The host domain
+host: eclipse.org

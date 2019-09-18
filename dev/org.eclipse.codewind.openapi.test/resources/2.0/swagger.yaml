@@ -1,0 +1,88 @@
+---
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: ''
+  description: GENERATED Swagger Sample template
+  termsOfService: ''
+  contact:
+    name: ChangeMe
+    email: changeme@swagger.io
+    url: https://localhost:9080
+  license:
+    name: ChangeMe
+    url: https://localhost:9080/license/license.html
+tags:
+- name: getPath
+  description: GENERATED GET path
+- name: putPath
+  description: GENERATED PUT path
+- name: postPath
+  description: GENERATED POST path
+basePath: "/api"
+paths:
+  "/getPath":
+    get:
+      tags:
+      - getPath
+      description: GENERATED GET operation
+      responses:
+        '200':
+          description: Generated HTTP response code
+      parameters:
+      - name: id
+        in: query
+        type: string
+        description: GENERATED query parameter 'id' for GET operation
+        required: true
+  "/putPath/{pathId}":
+    put:
+      tags:
+      - putPath
+      description: GENERATED PUT operation
+      responses:
+        '202':
+          description: GENERATED HTTP response code
+      parameters:
+      - name: pathId
+        in: path
+        type: string
+        description: GENERATED path parameter 'pathID' for PUT operation
+        required: true
+      - name: putRequest
+        in: body
+        description: GENERATED body parameter 'request' for PUT operation
+        required: true
+        schema:
+          "$ref": "#/definitions/reqOperation"
+  "/postPath":
+    post:
+      tags:
+      - postPath
+      description: GENERATED POST operation
+      responses:
+        '100':
+          description: GENERATED HTTP response code
+      parameters:
+      - name: from
+        in: header
+        type: string
+        description: GENERATED header parameter 'from' for POST operation
+        required: true
+      - name: postRequest
+        in: body
+        description: GENERATED body parameter 'postRequest' for POST operation
+        required: true
+        schema:
+          "$ref": "#/definitions/reqOperation"
+definitions:
+  reqOperation:
+    type: object
+    description: GENERATED definition object, rename and fill in the structure
+    properties:
+      deliveryInterval:
+        type: integer
+        example: '60000'
+      inboxExpiry:
+        type: integer
+        example: '3000000'

@@ -1,0 +1,22 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "",
+		"description": "GENERATED Swagger template",
+		"termsOfService": "",
+		"contact":{
+		   "name": "",
+		   "email": "",
+		   "url": ""
+		},
+		"license":{
+		  "name":"",
+		  "url":""
+		},
+		"version": "1.0.0"		
+	},
+	"paths":{
+	
+	}
+
+}

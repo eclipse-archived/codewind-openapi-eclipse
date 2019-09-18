@@ -20,6 +20,7 @@ import org.eclipse.codewind.openapi.test.client.nodejs.TypescriptNodeTest;
 import org.eclipse.codewind.openapi.test.client.python.PythonTest;
 import org.eclipse.codewind.openapi.test.client.swift.Swift3Test;
 import org.eclipse.codewind.openapi.test.client.swift.Swift4Test;
+import org.eclipse.codewind.openapi.test.core.contenttype.ContentTypeTest;
 import org.eclipse.codewind.openapi.test.html.Html2GeneratorTest;
 import org.eclipse.codewind.openapi.test.server.go.GoGinServerTest;
 import org.eclipse.codewind.openapi.test.server.go.GoServerTest;
@@ -52,7 +53,8 @@ import org.junit.runners.Suite;
 	SpringTest.class,
 	NodeJsServerTest.class,
 	PythonFlaskTest.class,
-	Html2GeneratorTest.class
+	Html2GeneratorTest.class,
+	ContentTypeTest.class
 })
 public class AllTests {
 

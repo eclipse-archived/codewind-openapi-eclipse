@@ -20,12 +20,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 public abstract class AbstractGenerateTest extends BaseTestCase {
 
 	// Configurable options to test and should be overridden
-	protected String newProjectName = "TestProject";
 	protected String targetOutputFolder = "/TestProject";
 	protected String language = "Java";
 	protected String generatorType = "java";
-	protected String sourceDefinition = Constants.PETSTORE_30;
-	protected String targetDefinitionInProject = "petstore.yaml";
 	
 	public AbstractGenerateTest() {
 		// Empty
