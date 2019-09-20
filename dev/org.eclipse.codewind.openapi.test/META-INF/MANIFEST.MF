@@ -16,16 +16,18 @@ Require-Bundle: org.junit,
 Bundle-Activator: org.eclipse.codewind.openapi.test.Activator
 Bundle-Vendor: IBM
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.codewind.openapi.test;x-internal:=true,
+Export-Package: org.eclipse.codewind.openapi.test,
  org.eclipse.codewind.openapi.test.client;x-internal:=true,
  org.eclipse.codewind.openapi.test.client.go;x-internal:=true,
  org.eclipse.codewind.openapi.test.client.java;x-internal:=true,
  org.eclipse.codewind.openapi.test.client.nodejs;x-internal:=true,
  org.eclipse.codewind.openapi.test.client.python;x-internal:=true,
  org.eclipse.codewind.openapi.test.client.swift;x-internal:=true,
+ org.eclipse.codewind.openapi.test.core.contenttype;x-internal:=true,
  org.eclipse.codewind.openapi.test.html;x-internal:=true,
  org.eclipse.codewind.openapi.test.server;x-internal:=true,
  org.eclipse.codewind.openapi.test.server.go;x-internal:=true,
  org.eclipse.codewind.openapi.test.server.java;x-internal:=true,
  org.eclipse.codewind.openapi.test.server.nodejs;x-internal:=true,
- org.eclipse.codewind.openapi.test.server.python;x-internal:=true
+ org.eclipse.codewind.openapi.test.server.python;x-internal:=true,
+ org.eclipse.codewind.openapi.test.util
