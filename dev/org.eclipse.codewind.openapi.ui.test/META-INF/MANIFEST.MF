@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OpenAPI UI Test Plugin
+Bundle-SymbolicName: org.eclipse.codewind.openapi.ui.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.codewind.openapi.ui.test.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.swtbot.eclipse.finder,
+ org.eclipse.swtbot.junit4_x,
+ org.junit,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.eclipse.codewind.openapi.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.codewind.openapi.ui.test
+Bundle-ActivationPolicy: lazy
