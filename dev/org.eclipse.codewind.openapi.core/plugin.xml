@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
          <content-type id="org.eclipse.codewind.openapi.core.openApiDocumentJson" name="%openApiContentTypeJson" 
-			base-type="org.eclipse.core.runtime.text"
+			base-type="org.eclipse.wst.json.core.jsonsource"
 			priority="high"		
 			file-extensions="json">
 			<describer class="org.eclipse.codewind.openapi.core.contenttype.OpenApiJsonContentDescriber" />
