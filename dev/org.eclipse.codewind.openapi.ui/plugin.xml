@@ -472,5 +472,19 @@
 			disabledIcon="icons/dtool16/html_generate.gif"
 			icon="icons/etool16/html_generate.gif" />
 	</extension>
+
+	<extension point="org.eclipse.ui.decorators" id="org.eclipse.codewind.openapi.ui.decorators" name="OpenAPI decorators">
+        <decorator
+            id="org.eclipse.codewind.openapi.ui.decorator" 
+            label="%DECORATOR"
+            state="true"
+            class="org.eclipse.codewind.openapi.ui.CustomLabelDecorator" 
+            lightweight="false">
+            <description>%DECORATOR_DESCRIPTION</description>
+            <enablement>
+                <objectClass name="org.eclipse.core.resources.IFile"/>
+            </enablement>
+        </decorator>
+	</extension>
 </plugin>
 
