@@ -12,14 +12,28 @@
  *******************************************************************************/
 package org.eclipse.codewind.openapi.ui.wizard;
 
+import java.util.StringTokenizer;
+
+import org.eclipse.codewind.openapi.core.IOpenApiConstants;
+import org.eclipse.codewind.openapi.core.maven.Constants;
+import org.eclipse.codewind.openapi.core.maven.Utils;
 import org.eclipse.codewind.openapi.core.util.Util;
+import org.eclipse.codewind.openapi.ui.Activator;
+import org.eclipse.codewind.openapi.ui.Constants.PROJECT_TYPE;
 import org.eclipse.codewind.openapi.ui.Messages;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,17 +49,24 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.part.FileEditorInput;
 
 public abstract class AbstractGenerateWizardPage extends WizardPage {
 
 	protected Text projectText;
 	protected Text fileText;
 	protected Text outputFolder;
+	private PROJECT_TYPE projectType;
+	protected String tempOrigFileName;
 
 	protected ISelection selection;
 	
@@ -58,6 +79,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 	
 	protected boolean isCodewindProject = false;
 	protected String codewindProjectLanguage = ""; //$NON-NLS-1$
+	protected String initialOutputFolder = null;
 	
 	public AbstractGenerateWizardPage(String pageName) {
 		super(pageName);
@@ -95,9 +117,20 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		}
 	}
 	
+	public PROJECT_TYPE getProjectType() {
+		return projectType;
+	}
+	
+	public String getPomFileBackupName() {
+		return tempOrigFileName;
+	}
+
 	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
+		
+		// Project type determines what we need to show
+		determineProjectType();
 		
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
@@ -142,7 +175,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		outputFolder.setLayoutData(gd);
 		outputFolder.setToolTipText(Messages.WIZARD_PAGE_OUTPUT_FOLDER_TOOLTIP);
 		outputFolder.addModifyListener(e -> dialogChanged(e));
-
+			
 		Button outputFolderBrowse = new Button(container, SWT.PUSH);
 		outputFolderBrowse.setText(Messages.WIZARD_PAGE_BROWSE_FOLDER);
 		outputFolderBrowse.addSelectionListener(new SelectionAdapter() {
@@ -150,7 +183,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 				handleBrowse();
 			}
 		});
-		
+
 		label = new Label(container, SWT.NULL);
 		label.setText(Messages.WIZARD_PAGE_LANGUAGE);
 
@@ -179,18 +212,15 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 	protected abstract void populateGeneratorTypesCombo(String language);
 	protected abstract void fillLanguagesCombo();
 	
-	protected void initialize() {
-		fileText.setText(""); //$NON-NLS-1$
+	protected void determineProjectType() {
+		
 		if (selection != null && selection.isEmpty() == false
 				&& selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
-			if (ssel.size() > 1)
-				return;
 			Object obj = ssel.getFirstElement();
 			if (obj instanceof IFile) {
 				preselectedOpenApiFile = (IFile) obj;
 				project = preselectedOpenApiFile.getProject();
-				fileText.setText(preselectedOpenApiFile.getFullPath().toString());
 			} else if (obj instanceof IContainer) {
 				IContainer container = (IContainer) obj;
 				project = container.getProject();
@@ -204,11 +234,33 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 				}
 				project = Util.getProject(obj);
 			}
-			if (project != null) {
+		}
+		
+		try {
+			boolean isMavenProject = Utils.isSupportedMavenProject(project);
+	    	if (isMavenProject) {
+	    		this.projectType = PROJECT_TYPE.MAVEN;		
+	    	}
+		} catch (Exception e) {
+			// ignore
+		}
+		if (this.projectType == null) {
+			this.projectType = PROJECT_TYPE.NOT_ASSESSED;  // The enhancement to improve the usability of other project types, languages, and generators is 'ongoing'
+		}
+	}
+
+	protected void initialize() {
+		fileText.setText(""); //$NON-NLS-1$
+		
+		if (project != null) {
+			if (preselectedOpenApiFile != null) {
+				fileText.setText(preselectedOpenApiFile.getFullPath().toString());				
+			} else {
 				initWithDefinitionAtRoot(); //$NON-NLS-1$
-				projectText.setText(project.getName());
 			}
-		}		
+			projectText.setText(project.getName());
+		}
+		
 		if (project != null) {
 			isCodewindProject = Util.isCodewindProject(project);
 			if (isCodewindProject) {
@@ -255,10 +307,23 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			} else {
 				fillLanguagesCombo(); // Regular project in the workspace
 			}
+			
 			if ("swift".equals(codewindProjectLanguage) || "Swift".equals(codewindProjectLanguage)) { //$NON-NLS-1$ //$NON-NLS-2$
 				outputFolder.setText(project.getFullPath().toString() + "/Sources"); //$NON-NLS-1$
 			} else {
 				outputFolder.setText(project.getFullPath().toString());					
+			}
+			
+			if (this.projectType == PROJECT_TYPE.MAVEN) {
+				initialOutputFolder = project.getFullPath().toString();
+				try {
+					boolean hasJavaNature = Utils.hasJavaNature(project);
+					if (hasJavaNature) {
+						languages.setText("Java");
+					}
+				} catch (CoreException e) {
+					// ignore.  Language combobox will not be pre-selected
+				}
 			}
 		}
 	}
@@ -275,6 +340,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			}
 		}
 		updateStatus(null);
+		setMessage(null);
 		setPageComplete(true);
 		IResource container = project;
 		String fileName = getFileName();
@@ -292,13 +358,31 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus(Messages.WIZARD_PAGE_SELECT_DEFINITION);
+			addInfoStatus(Messages.WIZARD_PAGE_SELECT_DEFINITION);
 			return;
 		}
-		if (outputFolder.getText().length() == 0) {
-			updateStatus(Messages.WIZARD_PAGE_SELECT_OUTPUT_FOLDER);
-			return;				
-		}		
+		if (e != null && e.getSource() == outputFolder) {
+			IResource findMember = project.getWorkspace().getRoot().findMember(outputFolder.getText());
+			if (findMember != null && findMember.exists() && validateOutputFolder(findMember.getLocation().toOSString())) {
+				String workspacePathOfFolder = findMember.getFullPath().toString();
+				StringTokenizer stringTokenizer = new StringTokenizer(workspacePathOfFolder, "/"); //$NON-NLS-1$
+				if (stringTokenizer.countTokens() == 1) {
+					setMessage(null);
+				} else {
+					setMessage(Messages.MAVEN_PROJECT_DIFFERENT_OUTPUT_FOLDER_DESCRIPTION, IStatus.INFO);
+				}
+				updateStatus(null);
+			} else {
+				if (outputFolder.getText().equals(".")) { //$NON-NLS-1$
+					updateStatus(null);
+				} else if (outputFolder.getText().length() == 0) {
+					updateStatus(Messages.WIZARD_PAGE_SELECT_OUTPUT_FOLDER);
+				} else {
+					updateStatus(Messages.BROWSE_DIALOG_OUTPUT_FOLDER_INVALID);					
+				}
+			}
+			return;
+		}
 		if (languages.getText().length() == 0 && languages.getSelectionIndex() < 0) {
 			addInfoStatus(Messages.WIZARD_PAGE_SELECT_LANGUAGE);
 			return;
@@ -316,7 +400,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 	}
 	
 	private void addInfoStatus(String message) {
-		setErrorMessage(message);
+		setMessage(message, IStatus.INFO);
 		setPageComplete(false);
 	}
 
@@ -333,12 +417,12 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 					String fileName = f.getName();
 					if ((fileName.endsWith(".yaml") || fileName.endsWith(".yml") || fileName.endsWith(".json")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						&& !fileName.startsWith(".")
-						&& !fileName.toLowerCase().equals("package.json")
-						&& !fileName.toLowerCase().equals("package-lock.json")
-						&& !fileName.toLowerCase().equals("chart.yaml")
-						&& !fileName.toLowerCase().equals("nodemon.json")
-						&& !fileName.toLowerCase().equals("manifest.yml")
-						&& !fileName.toLowerCase().equals("devfile.yaml")) {
+						&& !fileName.toLowerCase().equals("package.json") //$NON-NLS-1$
+						&& !fileName.toLowerCase().equals("package-lock.json") //$NON-NLS-1$
+						&& !fileName.toLowerCase().equals("chart.yaml") //$NON-NLS-1$
+						&& !fileName.toLowerCase().equals("nodemon.json") //$NON-NLS-1$
+						&& !fileName.toLowerCase().equals("manifest.yml") //$NON-NLS-1$
+						&& !fileName.toLowerCase().equals("devfile.yaml")) { //$NON-NLS-1$
 						return true;
 					}
 				} else {
@@ -357,45 +441,66 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		}
 	}
 
-	protected void handleBrowse() {
-		
-		ElementTreeSelectionDialog ed = new ElementTreeSelectionDialog(getShell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-		ed.setInput(project);
-		ed.setAllowMultiple(false);
-		ed.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_FOLDER);
-		ed.setTitle(Messages.BROWSE_DIALOG_TITLE_SELECT_FOLDER);
-		String out = outputFolder.getText();
-		if (out.startsWith(project.getFullPath().toString())) {
+	protected void handleBrowse() {		
+		DirectoryDialog dd = new DirectoryDialog(getShell());
+		String currentOutputFolderText = outputFolder.getText();
+		if (currentOutputFolderText.startsWith(project.getFullPath().toString())) {
 			String s = outputFolder.getText().substring(project.getFullPath().toString().length());
-			ed.setInitialSelection(project.findMember(s));
-		}		
-		ed.addFilter(new ViewerFilter() {			
-			@Override
-			public boolean select(Viewer arg0, Object arg1, Object resource) {
-				if (resource instanceof IFile) {
-					return false;
+			IResource findMember = project.findMember(s);
+			dd.setFilterPath(findMember.getLocation().toString());
+		} else {
+			dd.setFilterPath(project.getLocation().toString());
+		}
+		// Usability Enhancement/Issue reported: Use a dialog that supports creating a new folder while the browse dialog is up
+		dd.setMessage(Messages.BROWSE_DIALOG_MESSAGE_SELECT_FOLDER);
+		String selectedFolder = dd.open(); // null if cancelled
+		if (selectedFolder != null) {
+			if (validateOutputFolder(selectedFolder)) {
+				String workspacePathOfFolder = selectedFolder.substring(project.getWorkspace().getRoot().getLocation().toOSString().length());
+				outputFolder.setText(workspacePathOfFolder);				
+				outputFolder.setFocus();
+				StringTokenizer stringTokenizer = new StringTokenizer(workspacePathOfFolder, "/"); //$NON-NLS-1$
+				if (stringTokenizer.countTokens() == 1) {
+					setMessage(null);
+				} else {
+					setMessage(Messages.MAVEN_PROJECT_DIFFERENT_OUTPUT_FOLDER_DESCRIPTION, IStatus.INFO);
 				}
-				return true;
-			}
-		});
-		ed.setEmptyListMessage(Messages.BROWSE_DIALOG_NO_CHILD_FOLDERS);
-		if (ed.open() == ElementTreeSelectionDialog.OK) {
-			Object[] result = ed.getResult();
-			if (result.length == 1) {
-				outputFolder.setText(((IContainer)result[0]).getFullPath().toString());
+				return;
 			} else {
-				outputFolder.setText(project.getFullPath().toString());
+				MessageDialog.openError(getShell(), Messages.BROWSE_DIALOG_OUTPUT_FOLDER_INVALID, Messages.BROWSE_DIALOG_OUTPUT_FOLDER_INVALID_MESSAGE);
 			}
+			updateStatus(null);
 		}
 	}
 	
 	protected void initWithDefinitionAtRoot() {
-		boolean isFound = checkForDefinition("openapi.yaml");
+		// Do fast check for recommended spec names:
+		boolean isFound = checkForDefinition("openapi.yaml"); //$NON-NLS-1$
 		if (!isFound) {
-			isFound = checkForDefinition("openapi.yml");
+			isFound = checkForDefinition("openapi.yml"); //$NON-NLS-1$
 			if (!isFound) {
-				isFound = checkForDefinition("openapi.json");
+				isFound = checkForDefinition("openapi.json"); //$NON-NLS-1$
 			}
+		}
+		// Usability enhancement.  Use content type support to pre-populate the file text field with the first known Open API file
+		if (!isFound) { // If still not found, then use content type
+			try {
+				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+				IResource[] members = project.members();
+				int numOfMembers = members.length;
+				for (int i = 0; i < numOfMembers; i++) {
+					if (members[i].getType() == IResource.FILE && members[i].exists() && members[i].isAccessible()) {
+						boolean isOpenApiFile = verifyContentType(((IFile)members[i]), contentTypeManager);
+						if (isOpenApiFile) {
+							preselectedOpenApiFile = (IFile)members[i];
+							fileText.setText(preselectedOpenApiFile.getFullPath().toString());
+							break;
+						}
+					}
+				}
+			} catch (CoreException e) {
+				// Ignore.  Will not pre-populate combo with a file name
+			}					
 		}
 	}
 	
@@ -408,9 +513,80 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		}
 		return false;
 	}
-
 	
+	public boolean preCodeGen(boolean ignoreFileExists) {
+		// If the .openapi-generator-ignore, prompt to override files regardless of project type
+		if (ignoreFileExists) {
+        	boolean goAhead = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.INFO_FILES_EXIST_TITLE, Messages.INFO_FILES_EXIST_DESCRIPTION);
+        	if (!goAhead) {
+        		return false;
+        	}
+		}
+		boolean isOutputFolderProjectRoot = getOutputFolder().equals(project.getFullPath().toString());
+		if (this.projectType == PROJECT_TYPE.MAVEN && isOutputFolderProjectRoot && !ignoreFileExists) {
+			boolean goAhead = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.MAVEN_PROJECT_DETECTED_TITLE, Messages.MAVEN_PROJECT_DETECTED_DESCRIPTION);
+        	if (!goAhead) {
+        		return false;
+        	}
+		}
+		
+		if (this.projectType == PROJECT_TYPE.MAVEN && isOutputFolderProjectRoot && !ignoreFileExists) {
+			try {
+				IFile pomXmlFile = (IFile)project.findMember(Constants.POM_FILE_NAME);
+				
+			    IEditorPart editorForPom = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findEditor(new FileEditorInput(pomXmlFile));
+			    if (editorForPom != null) {
+			    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorForPom,  true);
+			    }				
+				int i = 0;
+				IFile tempOrigFile = (IFile)this.project.findMember(Constants.POM_FILE_BACKUP_XML);
+				this.tempOrigFileName = Constants.POM_FILE_BACKUP_XML;
+				if (tempOrigFile != null) {
+					do {
+						if (tempOrigFile != null && !tempOrigFile.exists() ) {
+							break;
+						}
+						i++;
+						this.tempOrigFileName = Constants.POM_FILE_BACKUP + "-" + i + Constants.POM_FILE_EXTENSION; //$NON-NLS-1$
+						tempOrigFile = (IFile)this.project.findMember(tempOrigFileName);
+
+					} while (tempOrigFile != null && tempOrigFile.exists());					
+				}
+			    pomXmlFile.move(project.getFullPath().append(this.tempOrigFileName), true, new NullProgressMonitor());				
+			} catch (CoreException e) {
+				Activator.log(IStatus.INFO, "Unexpected exception at pre-CodeGen:", e); //$NON-NLS-1$
+			}
+		}
+		return true;
+	}
+
 	public boolean doFinish(IProgressMonitor monitor) {
+		return false;
+	}
+	
+	/* 
+	 * selectedFolder is the fully qualified path name to the folder
+	 * It is valid if it starts with the fully qualified path name of the project
+	 */
+	private boolean validateOutputFolder(String selectedFolder) {
+		if (selectedFolder.startsWith(project.getLocation().toOSString())) { // Tested on Windows
+			return true;
+		}
+		return false;
+	}
+
+	private boolean verifyContentType(IFile iFile, IContentTypeManager contentTypeManager) {
+		try {
+			IContentType contentType = contentTypeManager.findContentTypeFor(iFile.getContents(), iFile.getName());
+			if (contentType != null) {
+				String id = contentType.getId();
+				if (IOpenApiConstants.CONTENTTYPE_JSON.equals(id) || IOpenApiConstants.CONTENTTYPE_YAML.contentEquals(id)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			// ignore
+		}
 		return false;
 	}
 }

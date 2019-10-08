@@ -14,26 +14,31 @@ package org.eclipse.codewind.openapi.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.codewind.openapi.ui.Activator;
+import org.eclipse.codewind.openapi.ui.Constants.PROJECT_TYPE;
 import org.eclipse.codewind.openapi.ui.Messages;
 import org.eclipse.codewind.openapi.ui.commands.AbstractOpenApiGeneratorCommand;
+import org.eclipse.codewind.openapi.ui.commands.PostGenCommand;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 public abstract class AbstractGenerateWizard extends Wizard implements INewWizard {
 	protected AbstractGenerateWizardPage page;
 	protected ISelection selection;
-	
+
 	public AbstractGenerateWizard() {
 		// Empty
 	}
@@ -44,10 +49,10 @@ public abstract class AbstractGenerateWizard extends Wizard implements INewWizar
 	}
 
 	protected abstract AbstractOpenApiGeneratorCommand getCommand();
-	
+
 	@Override
 	public void addPage(IWizardPage p) {
-		this.page = (AbstractGenerateWizardPage)p;
+		this.page = (AbstractGenerateWizardPage) p;
 		super.addPage(page);
 	}
 
@@ -55,30 +60,54 @@ public abstract class AbstractGenerateWizard extends Wizard implements INewWizar
 	public boolean performFinish() {
 		AbstractOpenApiGeneratorCommand cmd = getCommand();
 		IProject project = page.getProject();
+
 		IResource ignoreFile;
 		if (page.getOutputFolder().equals(project.getFullPath().toString())) {
 			ignoreFile = project.findMember(".openapi-generator-ignore"); //$NON-NLS-1$
 		} else {
-			IFolder outputFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(page.getOutputFolder()));
+			IFolder outputFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot()
+					.getFolder(new Path(page.getOutputFolder()));
 			ignoreFile = outputFolder.findMember(".openapi-generator-ignore"); //$NON-NLS-1$
 
-		}		
-		if (ignoreFile != null && ignoreFile.exists()) {
-        	boolean openConfirm = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.INFO_FILES_EXIST_TITLE, Messages.INFO_FILES_EXIST_DESCRIPTION);
-        	if (!openConfirm) {
-        		return false;
-        	}
 		}
-		try {
-			getContainer().run(true, false, cmd);
-		} catch (InterruptedException e) {
-			return false;
-		} catch (InvocationTargetException e) {
-			Throwable realException = e.getTargetException();
-			realException.printStackTrace();
-			return false;
+		boolean ignoreFileExists = ignoreFile != null && ignoreFile.exists();
+		// Do pre-code gen checks for both generators
+		boolean doContinue = page.preCodeGen(ignoreFileExists);
+		if (!doContinue) {
+			performCancel();
+			return true; // To close the wizard, after confirmation dialogs are dismissed by the user
 		}
+
+		PROJECT_TYPE projectType = page.getProjectType();
+
+		// Need a wrapper outside the context of the wizard page, since the wizard will be disposed of.
+		// Pass in the needed parameters gathered by the wizard
+	    // Originally, this was supposed to run inside the wizard's container progress, but potentially,
+		// this could be a long running process if mvn dependencies are downloaded.
+		PostGenCommand postGenCommand = new PostGenCommand(project, projectType, ignoreFileExists,
+				page.getOutputFolder(), page.getPomFileBackupName());
+
+		// Dismiss the wizard and run the workspace modify operations in an eclipse Job
+		Job job = new Job(Messages.JOB_GENERATING) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					cmd.run(monitor); // Run the generator
+					if (projectType == PROJECT_TYPE.MAVEN) {
+						postGenCommand.run(monitor);
+					}
+				} catch (InvocationTargetException e) {
+					Activator.log(IStatus.INFO, "Generator failed: " + e.getMessage()); //$NON-NLS-1$
+				} catch (InterruptedException e) {
+					Activator.log(IStatus.INFO, "Generator job was cancelled"); //$NON-NLS-1$
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.setUser(true);
+		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+		job.setPriority(Job.LONG);
+		job.schedule(1000);
 		return true;
 	}
-
 }

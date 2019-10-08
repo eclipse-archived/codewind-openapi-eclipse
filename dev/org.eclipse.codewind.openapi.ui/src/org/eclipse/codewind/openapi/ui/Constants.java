@@ -21,6 +21,8 @@ public class Constants {
 		// Empty
 	}
 	
+	public static enum PROJECT_TYPE { MAVEN, NODEJS, GO, NOT_ASSESSED, UNKNOWN};
+
 	public static String CODEWIND_EXPLORER_VIEW = "org.eclipse.codewind.ui.explorerView"; //$NON-NLS-1$
 	public static String HTML_DOCUMENTATION_FILE = "index.html"; //$NON-NLS-1$
 

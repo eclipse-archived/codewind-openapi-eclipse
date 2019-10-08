@@ -68,6 +68,11 @@ public class Activator extends Plugin {
 		}
 	}
 	
+	public static void log(int severity, String message, Exception e) {
+		plugin.getLog().log(new Status(severity, PLUGIN_ID, message));
+		log(severity, e);
+	}
+	
 	public static void log(int severity, Exception e) {
 		if (CoreLogger.ERROR) {
 			StringWriter writer = new StringWriter();
