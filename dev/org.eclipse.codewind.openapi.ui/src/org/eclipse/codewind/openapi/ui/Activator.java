@@ -83,7 +83,12 @@ public class Activator extends AbstractUIPlugin {
 	public static void log(int severity, String message) {
 		plugin.getLog().log(new Status(severity, PLUGIN_ID, message));
 	}
-	
+
+	public static void log(int severity, String message, Exception e) {
+		plugin.getLog().log(new Status(severity, PLUGIN_ID, message));
+		log(severity, e);
+	}
+
 	public static void log(int severity, Exception e) {
 		if (UILogger.ERROR) {
 			StringWriter writer = new StringWriter();
