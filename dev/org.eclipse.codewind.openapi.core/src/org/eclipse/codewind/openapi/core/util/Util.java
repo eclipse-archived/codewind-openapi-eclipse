@@ -29,7 +29,7 @@ import org.json.JSONTokener;
 
 public class Util {
 
-	private static String UNKNOWN_LANGUAGE = "unknown"; //$NON-NLS-1$
+	private static String UNKNOWN_VALUE = "unknown"; //$NON-NLS-1$
 	
 	public Util() {
 	}
@@ -52,7 +52,7 @@ public class Util {
 				Object object = jobj.get(IOpenApiConstants.CODEWIND_LANGUAGE);
 				if (object != null) {
 					String lang = object.toString();
-					if (UNKNOWN_LANGUAGE.equals(lang)) {
+					if (UNKNOWN_VALUE.equals(lang)) {
 						lang = ""; //$NON-NLS-1$
 					}
 					return lang;
@@ -78,7 +78,7 @@ public class Util {
 									Object object = jobj.get(IOpenApiConstants.CODEWIND_LANGUAGE);
 									if (object != null) {
 										String lang = object.toString();
-										if (UNKNOWN_LANGUAGE.equals(lang)) {
+										if (UNKNOWN_VALUE.equals(lang)) {
 											lang = ""; //$NON-NLS-1$
 										}
 										return lang;
@@ -133,10 +133,37 @@ public class Util {
 			
 			if (languageObject instanceof String) {
 				String language = (String)languageObject;
-				if (UNKNOWN_LANGUAGE.equals(language)) { //$NON-NLS-1$
+				if (UNKNOWN_VALUE.equals(language)) { //$NON-NLS-1$
 					language = ""; //$NON-NLS-1$
 				}
 				return language;
+			}
+		} catch (Exception e) {
+			Activator.log(IStatus.ERROR, e);
+		}
+		return ""; //$NON-NLS-1$
+	}
+	
+	/**
+	 * 
+	 * @param obj
+	 * @return a non-null string
+	 */
+	public static String getProjectTypeId(Object obj) {
+		Class<?> clazz = obj.getClass();
+		try {
+			Field field = clazz.getField(IOpenApiConstants.CODEWIND_PROJECT_TYPE);
+			Object projectTypeObject = field.get(obj);
+			Class<?> projectTypeClass = projectTypeObject.getClass();
+			Method getIdMethod = projectTypeClass.getMethod(IOpenApiConstants.CODEWIND_GET_ID_METHOD); //$NON-NLS-1$
+			Object typeObject = getIdMethod.invoke(projectTypeObject);
+			
+			if (typeObject instanceof String) {
+				String typeId = (String)typeObject;
+				if (UNKNOWN_VALUE.equals(typeId)) { //$NON-NLS-1$
+					typeId = ""; //$NON-NLS-1$
+				}
+				return typeId;
 			}
 		} catch (Exception e) {
 			Activator.log(IStatus.ERROR, e);

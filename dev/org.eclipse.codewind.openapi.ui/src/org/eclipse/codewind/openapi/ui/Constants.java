@@ -108,4 +108,15 @@ public class Constants {
         {"Rust", "rust-server"},
         {"Scala", "scala-finch","scala-lagom-server", "scalatra"}
     };
+
+    public static String SPRING_SERVER = "spring";
+    public static String LIBERTY_AND_DOCKER_SERVER_GENERATORS[] = { // The supported/tested server generators for Liberty
+        "jaxrs-spec",
+        "jaxrs-cxf"
+    };
+
+    public static String SPRING_PROJECT_TYPE_ID = "spring";
+    public static String LIBERTY_PROJECT_TYPE_ID = "liberty";
+    public static String JAVA_DOCKER_PROJECT_TYPE_ID = "docker";
+
 }

@@ -19,6 +19,7 @@ public interface IOpenApiConstants {
 
 	public static final String CODEWIND_LANGUAGE = "language"; //$NON-NLS-1$
 	public static final String CODEWIND_PROJECT_NAME = "name"; //$NON-NLS-1$
+	public static final String CODEWIND_PROJECT_TYPE = "projectType"; //$NON-NLS-1$
 	public static final String CODEWIND_PROJECT_FULL_LOCAL_PATH = "fullLocalPath"; //$NON-NLS-1$
 	public static final String CODEWIND_PROJECT_LANGUAGE = "projectLanguage"; //$NON-NLS-1$
 	public static final String CODEWIND_GET_ID_METHOD = "getId"; //$NON-NLS-1$
