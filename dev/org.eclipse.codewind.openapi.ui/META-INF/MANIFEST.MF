@@ -12,7 +12,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.core.expressions,
  org.eclipse.codewind.openapi.core,
- org.eclipse.jdt.core
+ org.eclipse.jdt.core,
+ org.eclipse.jst.common.project.facet.core,
+ org.eclipse.jst.common.project.facet.ui,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.m2e.core.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.codewind.openapi.ui
 Bundle-ActivationPolicy: lazy
