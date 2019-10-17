@@ -66,8 +66,7 @@ public class BaseTestCase extends SWTBotTestCase {
 		SWTBotMenu contextMenu = targetTreeItem.contextMenu(UIConstants.MENU_OPENAPI_GENERATE);
 		SWTBotMenu menu = contextMenu.menu(type);
 		menu.click();
-		if ( language != null )
-		{
+		if (language != null) {
 			SWTBotCombo langCombo = bot.comboBox(0);
 			langCombo.setSelection(language);
 		}
@@ -83,7 +82,6 @@ public class BaseTestCase extends SWTBotTestCase {
 		assertTrue("The project file " + fileToCheck + " does not exist.", file.exists());
 
 	}
-
 
 	protected void waitForProcess() {
 		final IJobManager manager = Job.getJobManager();
@@ -108,7 +106,7 @@ public class BaseTestCase extends SWTBotTestCase {
 			}
 
 		}
-		return (unfinished!=0);
+		return (unfinished != 0);
 	}
 
 	protected void createGeneralProject(String projectName) {
