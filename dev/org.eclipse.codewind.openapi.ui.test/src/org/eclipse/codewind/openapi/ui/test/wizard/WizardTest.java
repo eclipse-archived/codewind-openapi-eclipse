@@ -33,7 +33,6 @@ import org.junit.runners.MethodSorters;
 public class WizardTest extends BaseTestCase {
 
 	public WizardTest() {
-		this.newProjectName = "ClientStubPHPProject";
 	}
 	
 	@BeforeClass
@@ -51,6 +50,7 @@ public class WizardTest extends BaseTestCase {
 	public void testWorkingYAMLPHPCLient01() {
 		sourceDefinition = Constants.PETSTORE_30;
 		targetDefinitionInProject = "petstore.yaml";
+		this.newProjectName = "ClientStubPHPProject";
 		setup();
 		testOpenAPIWizardHappyPath(UIConstants.MENU_GEN_CLIENT, "PHP","composer.json");
 	}
@@ -59,6 +59,7 @@ public class WizardTest extends BaseTestCase {
 	public void testWorkingYAMLNodeJSServer02() {
 		sourceDefinition = Constants.PETSTORE_30;
 		targetDefinitionInProject = "petstore.yaml";
+		this.newProjectName = "ServerStubNodeProject";
 		setup();
 		testOpenAPIWizardHappyPath(UIConstants.MENU_GEN_SERVER, "Node.js","package.json");
 	}
@@ -67,6 +68,7 @@ public class WizardTest extends BaseTestCase {
 	public void testWorkingYAMLHTML03() {
 		sourceDefinition = Constants.PETSTORE_30;
 		targetDefinitionInProject = "petstore.yaml";
+		this.newProjectName = "genHtmlProject";
 		setup();
 		testOpenAPIWizardHappyPath(UIConstants.MENU_HTML, null,"index.html");
 	}
