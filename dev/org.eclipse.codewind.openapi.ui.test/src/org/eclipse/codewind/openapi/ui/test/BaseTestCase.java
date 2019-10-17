@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
@@ -67,7 +66,6 @@ public class BaseTestCase extends SWTBotTestCase {
 		SWTBotMenu contextMenu = targetTreeItem.contextMenu(UIConstants.MENU_OPENAPI_GENERATE);
 		SWTBotMenu menu = contextMenu.menu(type);
 		menu.click();
-		SWTBot bot = new SWTBot();
 		if ( language != null )
 		{
 			SWTBotCombo langCombo = bot.comboBox(0);
