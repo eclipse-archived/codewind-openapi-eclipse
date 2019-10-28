@@ -13,12 +13,14 @@
 package org.eclipse.codewind.openapi.ui.test;
 
 import org.eclipse.codewind.openapi.ui.test.menus.ContextMenuTest;
+import org.eclipse.codewind.openapi.ui.test.wizard.WizardTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	ContextMenuTest.class
+	ContextMenuTest.class,
+	WizardTest.class
 })
 public class AllUiTests {
 
