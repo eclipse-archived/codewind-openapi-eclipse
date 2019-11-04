@@ -8,7 +8,7 @@ def abortOlderBuilds() {
 
     for (def build : currentJob.builds) {
         def executor = build.getExecutor()
-        
+
         if (build.isBuilding() && 
             build.number.toInteger() != buildNumber && 
             executor != null) {
@@ -37,7 +37,6 @@ pipeline {
     stages {
 
         stage('Init') {
-            agent { label 'master' }
             steps {
                 script {
                     abortOlderBuilds()
