@@ -1,27 +1,5 @@
 #!groovy​
 
-@NonCPS
-def abortOlderBuilds() {
-    def jobName = env.JOB_NAME
-    def buildNumber = env.BUILD_NUMBER.toInteger()
-    def currentJob = Jenkins.instance.getItemByFullName(jobName)
-
-    for (def build : currentJob.builds) {
-        def executor = build.getExecutor()
-
-        if (build.isBuilding() && 
-            build.number.toInteger() != buildNumber && 
-            executor != null) {
-            
-            executor.interrupt(
-                Result.ABORTED,
-                new CauseOfInterruption.UserInterruption("Aborted by #${currentBuild.number}")
-            )
-            println("Aborted older build : #${build.number}")            
-        }
-    }
-}
-
 pipeline {
     agent any
     
@@ -36,14 +14,6 @@ pipeline {
     
     stages {
 
-        stage('Init') {
-            steps {
-                script {
-                    abortOlderBuilds()
-                }
-            }  
-        }
-        
         stage('Build') {
             steps {
                 script {
