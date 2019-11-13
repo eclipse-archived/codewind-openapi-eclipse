@@ -104,6 +104,7 @@ pipeline {
                         
                         ssh $sshHost rm -rf $deployDir/${UPLOAD_DIR}
                         ssh $sshHost mkdir -p $deployDir/${UPLOAD_DIR}
+                        ls -la $OUTPUT_DIR/*
                         scp -r $OUTPUT_DIR/* $sshHost:$deployDir/${UPLOAD_DIR}
                     '''
                 }
