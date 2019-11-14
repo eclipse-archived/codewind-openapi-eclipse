@@ -23,7 +23,7 @@ public class NodeJsServerTest extends AbstractServerGenerateTest {
 		newProjectName = "NodejsServerProject";
 		targetOutputFolder = "/NodejsServerProject";
 		language = "Node.js";
-		generatorType = "nodejs-server";
+		generatorType = "nodejs-express-server";
 		sourceDefinition = Constants.PETSTORE_30;
 		targetDefinitionInProject = "a/b/c/mypetstore.yaml";
 	}
@@ -39,8 +39,8 @@ public class NodeJsServerTest extends AbstractServerGenerateTest {
 		verifyGeneratedFile("README.md");
 		verifyGeneratedFile("index.js");
 		verifyGeneratedFile("api/openapi.yaml");
-		verifyGeneratedFile("controllers/Pets.js");
-		verifyGeneratedFile("service/PetsService.js");
-		verifyGeneratedFile("utils/writer.js");
+		verifyGeneratedFile("controllers/PetsController.js");
+		verifyGeneratedFile("services/PetsService.js");
+		verifyGeneratedFile("utils/openapiRouter.js");
 	}
 }

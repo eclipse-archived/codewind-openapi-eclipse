@@ -145,13 +145,13 @@ public abstract class AbstractOpenApiGeneratorCommand extends WorkspaceModifyOpe
 		}
 		
 		String jarOverride = System.getProperty(IOpenApiConstants.OPENAPI_CLI_OVERRIDE_PROPERTY);
-		// eg. -Dorg.eclipse.codewind.openapi.cli.jar.path=/Users/foo/openapi/openapi-generator-cli-4.0.0.jar
+		// eg. -Dorg.eclipse.codewind.openapi.cli.jar.path=/Users/foo/openapi/openapi-generator-cli-x.y.z.jar
 		// Allow users to override and provide their own codegen jar
 		if (jarOverride != null && jarOverride.contains("openapi-generator-cli")) {
 			codegenJar = argSurround + jarOverride + argSurround;
 		} else {
 			// else, use as default, the codegen jar that we bundle
-			codegenJar = argSurround + pluginLocation + "lib/" + IOpenApiConstants.CODEGEN_JAR_401 + argSurround; //$NON-NLS-1$		
+			codegenJar = argSurround + pluginLocation + "lib/" + IOpenApiConstants.CODEGEN_JAR + argSurround; //$NON-NLS-1$		
 		}
 		
 		if (isWindows) {

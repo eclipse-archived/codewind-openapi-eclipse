@@ -93,7 +93,7 @@ public class Constants {
             "jaxrs-resteasy",
             "jaxrs-resteasy-eap",
             "spring"},
-        {"Node.js", "nodejs-server"},
+        {"Node.js", "nodejs-express-server", "nodejs-server-deprecated"},
         {"Python", "python-flask"},
         {"Swift", ""},
         {"Ada", "ada-server"},

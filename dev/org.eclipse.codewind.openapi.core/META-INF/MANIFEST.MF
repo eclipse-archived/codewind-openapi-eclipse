@@ -17,7 +17,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
- lib/openapi-generator-cli-4.0.1.jar,
  lib/org.json_1.0.0.v201011060100.jar
 Export-Package: org.eclipse.codewind.openapi.core,
  org.eclipse.codewind.openapi.core.commands;x-friends:="org.eclipse.codewind.openapi.ui",

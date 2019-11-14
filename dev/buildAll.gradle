@@ -74,7 +74,7 @@ def artifactsFolder = file(projDir + '/' + project.properties['ant.artifacts.fol
 def corelibFolder = file(projDir + project.properties['codewind.core.prereqlib.folder'])
 def excludeJson = "json-20090211.jar"
 def jsonFile = file(projDir + project.properties['codewind.core.prereqlib.folder'] + '/org.json_1.0.0.v201011060100.jar')
-def openApiCliFile = file(projDir + project.properties['codewind.core.prereqlib.folder'] + '/openapi-generator-cli-4.0.1.jar')
+def openApiCliFile = file(projDir + project.properties['codewind.core.prereqlib.folder'] + '/openapi-generator-cli-4.2.2.jar')
 
 def filePrefix = "codewind-openapi-eclipse"
 
@@ -109,7 +109,7 @@ task downloadJson(type: Download) {
 
 task downloadOpenApiCli(type: Download) {
     println("Downloading OpenAPI Cli jar")
-    sourceUrl = 'http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/4.0.1/openapi-generator-cli-4.0.1.jar'
+    sourceUrl = 'http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/4.2.2/openapi-generator-cli-4.2.2.jar'
     target = openApiCliFile
 }
 
