@@ -79,6 +79,7 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 	
 	protected boolean isCodewindProject = false;
 	protected String codewindProjectLanguage = ""; //$NON-NLS-1$
+	protected String codewindProjectTypeId = ""; //$NON-NLS-1$
 	protected String initialOutputFolder = null;
 	
 	public AbstractGenerateWizardPage(String pageName) {
@@ -191,7 +192,6 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		languages.setLayoutData(gd);
-		languages.addModifyListener(e -> dialogChanged(e));
 		
 		label = new Label(container, SWT.NULL);
 		label.setText(Messages.WIZARD_PAGE_GENERATOR_TYPE);
@@ -202,10 +202,11 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 		gd.horizontalSpan = 2;
 		generatorTypes.setToolTipText(Messages.WIZARD_PAGE_GENERATOR_TYPE_TOOLTIP);
 		generatorTypes.setLayoutData(gd);
-		generatorTypes.addModifyListener(e -> dialogChanged(e));
 
 		initialize();
 		dialogChanged(null);
+		languages.addModifyListener(e -> dialogChanged(e));
+		generatorTypes.addModifyListener(e -> dialogChanged(e));
 		setControl(container);
 	}
 	
@@ -233,6 +234,11 @@ public abstract class AbstractGenerateWizardPage extends WizardPage {
 					codewindProjectLanguage = possibleLanguage;
 				}
 				project = Util.getProject(obj);
+				
+				String possibleProjectTypeId = Util.getProjectTypeId(obj);
+				if (possibleProjectTypeId.length() > 0) {
+					this.codewindProjectTypeId = possibleProjectTypeId;
+				}
 			}
 		}
 		

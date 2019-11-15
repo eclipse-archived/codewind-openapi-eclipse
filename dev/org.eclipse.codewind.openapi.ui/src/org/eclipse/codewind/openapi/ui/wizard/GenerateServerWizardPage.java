@@ -28,17 +28,43 @@ public class GenerateServerWizardPage extends AbstractGenerateWizardPage {
 	@Override
 	protected void populateGeneratorTypesCombo(String language) {
 		generatorTypes.removeAll();
+		// For specific Codewind overrides, populate the combo here.
+
+		// Populate with all known generators
 		for (int i = 0; i < Constants.ALL_SERVER_LANGUAGES.length; i++) {
 			if (Constants.ALL_SERVER_LANGUAGES[i][0].equals(language)) {
 				for (int j = 1; j < Constants.ALL_SERVER_LANGUAGES[i].length; j++) {
 					generatorTypes.add(Constants.ALL_SERVER_LANGUAGES[i][j]);						
 				}
-				if (generatorTypes.getItemCount() > 0) {
-					generatorTypes.select(0);										
-				}
 				break;
 			}
-		}		
+		}
+
+		if (language == "Java") {
+			// Spring
+			if (isCodewindProject && this.codewindProjectTypeId.equals(Constants.SPRING_PROJECT_TYPE_ID)) {
+				if (generatorTypes.indexOf(Constants.SPRING_SERVER) >= 0) {
+					generatorTypes.remove(Constants.SPRING_SERVER);									
+				}
+				generatorTypes.add(Constants.SPRING_SERVER, 0); // Put it first
+			}
+
+			// For Liberty
+			if (isCodewindProject && this.codewindProjectTypeId.equals(Constants.LIBERTY_PROJECT_TYPE_ID) || this.codewindProjectTypeId.equals(Constants.JAVA_DOCKER_PROJECT_TYPE_ID)) {
+				int length = Constants.LIBERTY_AND_DOCKER_SERVER_GENERATORS.length;
+				for (int i = 0; i < length; i++) {
+					if (generatorTypes.indexOf(Constants.LIBERTY_AND_DOCKER_SERVER_GENERATORS[i]) >= 0) {
+						generatorTypes.remove(Constants.LIBERTY_AND_DOCKER_SERVER_GENERATORS[i]);									
+					}
+				}
+				for (int i = length - 1; i >= 0; i--) {
+					generatorTypes.add(Constants.LIBERTY_AND_DOCKER_SERVER_GENERATORS[i], 0); // Put them at the top of the list						
+				}
+			}
+		}
+		if (generatorTypes.getItemCount() > 0) {
+			generatorTypes.select(0);										
+		}
 	}
 
 	@Override
