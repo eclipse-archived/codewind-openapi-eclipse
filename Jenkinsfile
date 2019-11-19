@@ -15,6 +15,14 @@ pipeline {
     stages {
 
         stage('Build') {
+            // This when clause disables Tagged build
+            when {
+                beforeAgent true
+                not {
+                    buildingTag()
+                }
+            }
+
             steps {
                 script {
                     println("Starting codewind-openapi-eclipse build ...")
@@ -34,6 +42,14 @@ pipeline {
         } 
         
         stage('Deploy') {
+            // This when clause disables Tagged build
+            when {
+                beforeAgent true
+                not {
+                    buildingTag()
+                }
+            }
+            
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
