@@ -50,6 +50,7 @@ public abstract class AbstractOpenApiGeneratorCommand extends WorkspaceModifyOpe
 
 	protected String language = null;
 	protected String generatorType = null;
+	protected boolean pomFileExists = false;
 	
 	public AbstractOpenApiGeneratorCommand() {
 		// empty
@@ -91,6 +92,13 @@ public abstract class AbstractOpenApiGeneratorCommand extends WorkspaceModifyOpe
 		return outputFolder;
 	}
 
+	public boolean getPomFileExists() {
+		return pomFileExists;
+	}
+	
+	public void setPomFileExists(boolean exists) {
+		this.pomFileExists = exists;
+	}
 	
 	@Override
 	protected void execute(IProgressMonitor monitor)

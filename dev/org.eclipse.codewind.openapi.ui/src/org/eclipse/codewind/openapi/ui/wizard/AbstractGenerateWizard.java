@@ -68,9 +68,20 @@ public abstract class AbstractGenerateWizard extends Wizard implements INewWizar
 			IFolder outputFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot()
 					.getFolder(new Path(page.getOutputFolder()));
 			ignoreFile = outputFolder.findMember(".openapi-generator-ignore"); //$NON-NLS-1$
-
 		}
+		
+		IResource pomFile;
+		if (page.getOutputFolder().equals(project.getFullPath().toString())) {
+			pomFile = project.findMember("pom.xml"); //$NON-NLS-1$
+		} else {
+			IFolder outputFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot()
+					.getFolder(new Path(page.getOutputFolder()));
+			pomFile = outputFolder.findMember("pom.xml"); //$NON-NLS-1$
+		}
+		
 		boolean ignoreFileExists = ignoreFile != null && ignoreFile.exists();
+		cmd.setPomFileExists(pomFile != null && pomFile.exists());
+
 		// Do pre-code gen checks for both generators
 		boolean doContinue = page.preCodeGen(ignoreFileExists);
 		if (!doContinue) {
