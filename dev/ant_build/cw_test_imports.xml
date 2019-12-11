@@ -73,31 +73,36 @@
 	  	</copy>
 
 		<!-- Copy build result content -->
+    <echo message="Copy to ${sourceDir}" />
 		<copy todir="${sourceDir}/features" overwrite="true" verbose="true">
-			<fileset dir="${local.workspace}/tools.image/test/features">
+			<fileset dir="${local.workspace}/tools.image/update_testplugins/features">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
 
 		<copy todir="${sourceDir}/plugins" overwrite="true" verbose="true">
-			<fileset dir="${local.workspace}/tools.image/test/plugins">
+			<fileset dir="${local.workspace}/tools.image/update_testplugins/plugins">
 				<include name="**/*.jar"/>
 			</fileset>
 		</copy>
 
 		<!-- Step 1 -->
+    <echo message="sourceDir: ${sourceDir}" />
+    <echo message="tempDir: ${tempDir}" />
+    <echo message="updateSiteDir: ${updateSiteDir}" />
+    <echo message="updateSiteDirFull: ${updateSiteDirFull}" />
 		<!-- Create site.xml with top level feature(s) -->
 		<generateUpdateSite
 			tempDir="${tempDir}"
 			sourceDir="${sourceDir}"
 			outputDir="${updateSiteDir}"
-			addIncludedFeatures="false">
+			addIncludedFeatures="true">
 
 		<!-- Add Main feature here -->
-			<category name="OpenAPI Tools"
+			<category name="OpenAPI Tools Test"
 				label="Codewind V${version} Unit Tests"
 				description="Codewind V${version} Unit Tests">
-				<feature id="org.eclipse.codewind.openapi.test" />
+				<feature id="org.eclipse.codewind.openapi.feature.test" />
 		  	</category>
 		</generateUpdateSite>
 
@@ -110,7 +115,7 @@
 			addIncludedFeatures="true">
 
 		<!-- Add Main feature here -->
-			<feature id="org.eclipse.codewind.openapi.test" />
+			<feature id="org.eclipse.codewind.openapi.feature.test" />
 	  	</generateUpdateSite>
 
 	  	<!-- Step 3 -->

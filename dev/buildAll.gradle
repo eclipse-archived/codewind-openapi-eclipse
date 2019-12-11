@@ -78,6 +78,12 @@ def openApiCliFile = file(projDir + project.properties['codewind.core.prereqlib.
 
 def filePrefix = "codewind-openapi-eclipse"
 
+def swtBotEclipseFinderFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.eclipse.finder_2.8.0.201906121535.jar')
+def swtBotJunitFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.junit4_x_2.8.0.201906121535.jar')
+def swtBotSwtFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.swt.finder_2.8.0.201906121535.jar')
+
+
+
 
 // Download dependent plugins from maven repository for 'org.eclipse.codewind.core'
 task getCoreDependencies(type: Copy) {
@@ -106,6 +112,26 @@ task downloadOpenApiCli(type: Download) {
     sourceUrl = 'http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/4.0.1/openapi-generator-cli-4.0.1.jar'
     target = openApiCliFile
 }
+
+task downloadSWTBotEclipseFinderJar(type: Download) {
+    println("Downloading SWTBot Eclipse Finder jar")
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.eclipse.finder_2.8.0.201906121535.jar'
+    target=swtBotEclipseFinderFile
+}
+
+task downloadSWTBotJunitJar(type: Download) {
+    println("Downloading SWTBot Junit jar")
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.junit4_x_2.8.0.201906121535.jar'
+    target=swtBotJunitFile
+}
+
+task downloadSWTBotSwtJar(type: Download) {
+    println("Downloading SWTBot Swt jar")
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.swt.finder_2.8.0.201906121535.jar'
+    target=swtBotSwtFile
+}
+
+
 
 class Download extends DefaultTask {
     @Input
@@ -220,6 +246,11 @@ preparePrereqsIvy.dependsOn importAnt
 compile.dependsOn preparePrereqsIvy
 compile.dependsOn downloadEclipseSDK
 compile.dependsOn downloadEclipseTargetPlatform
+compile.dependsOn downloadSWTBotEclipseFinderJar
+compile.dependsOn downloadSWTBotJunitJar
+compile.dependsOn downloadSWTBotSwtJar
+
+
 
 //// build version from the artifacts to avoid version mismatch
 import static groovy.io.FileType.FILES
