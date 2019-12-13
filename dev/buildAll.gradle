@@ -85,7 +85,7 @@ def swtBotSwtFile = file(projDir + project.properties['eclipse.target.platform.i
 
 
 
-// Download dependent plugins from maven repository for 'org.eclipse.codewind.core'
+// Download dependent plugins from maven repository for 'org.eclipse.codewind.openapi.core'
 task getCoreDependencies(type: Copy) {
 
     if (!corelibFolder.exists()) {
@@ -126,7 +126,7 @@ task downloadSWTBotJunitJar(type: Download) {
 }
 
 task downloadSWTBotSwtJar(type: Download) {
-    println("Downloading SWTBot Swt jar")
+    println("Downloading SWTBot SWT jar")
     sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.swt.finder_2.8.0.201906121535.jar'
     target=swtBotSwtFile
 }

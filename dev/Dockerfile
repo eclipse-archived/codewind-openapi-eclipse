@@ -10,7 +10,7 @@ RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-RUN wget http://eclipse.mirror.rafal.ca/technology/epp/downloads/release/2019-09/R/eclipse-jee-2019-09-R-linux-gtk-x86_64.tar.gz
+RUN wget http://www.eclipse.org/external/technology/epp/downloads/release/2019-09/R/eclipse-jee-2019-09-R-linux-gtk-x86_64.tar.gz
 RUN tar xzf eclipse-jee-2019-09-R-linux-gtk-x86_64.tar.gz
 ADD run.sh /home
 ADD runTest.sh /home
