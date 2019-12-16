@@ -81,8 +81,10 @@ pipeline {
         }    
         stage('Test') {
             steps {
-                testImage = docker.build("test-image", "./dev") 
+            	  script {
+                def testImage = docker.build("test-image", "./dev") 
 			    testImage.withRun("-v ./dev:/development test-image")
+			  }
             }
         }     
     }   
