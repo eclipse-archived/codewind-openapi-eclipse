@@ -35,9 +35,15 @@ pipeline {
         
         stage('Test') {
             steps {
-                def testImage = docker.build("test-image", "./dev") 
+                testImage = docker.build("test-image", "./dev") 
 			    testImage.withRun("-v ./dev:/development test-image")
             }
         }  
-    }    
+    }   
+    
+    post {
+      always {
+        junit './dev/results.xml'
+      }
+   }  
 }
