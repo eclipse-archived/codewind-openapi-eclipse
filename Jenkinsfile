@@ -32,7 +32,14 @@ pipeline {
                 }
             }
         } 
-        
+        stage('Test') {
+            steps {
+            	  script {
+                def testImage = docker.build("test-image", "./dev") 
+			    testImage.withRun("-v ./dev:/development test-image")
+			  }
+            }
+        }  
         stage('Deploy') {
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
@@ -79,14 +86,7 @@ pipeline {
                 }
             }
         }    
-        stage('Test') {
-            steps {
-            	  script {
-                def testImage = docker.build("test-image", "./dev") 
-			    testImage.withRun("-v ./dev:/development test-image")
-			  }
-            }
-        }     
+           
     }   
     post {
       always {
