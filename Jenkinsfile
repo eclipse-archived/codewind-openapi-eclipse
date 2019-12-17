@@ -15,11 +15,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    
                     
                     dir('dev') { sh './gradlew --stacktrace' }
-                }
+                
             }
         } 
         stage('Test') {
