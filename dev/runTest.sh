@@ -19,10 +19,6 @@ fi
 
 export ADDITIONAL_ENV_VARS="-Duser.timezone=America/Toronto  $ADDITIONAL_ENV_VARS"
 
-if [ "$run_on_ui_thread" == "true" ]; then
-	export APPLICATION_TYPE=org.eclipse.test.uitestapplication
-fi
-
 echo TEST CLASS NAME is $TEST_CLASS_NAME
 echo TEST PLUG-IN NAME is $TEST_PLUGIN_NAME
 echo APPLICATION_TYPE is $APPLICATION_TYPE

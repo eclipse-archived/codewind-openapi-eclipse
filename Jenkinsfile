@@ -27,6 +27,7 @@ pipeline {
                     export CWD=$(pwd)
                     echo "Current directory is ${CWD}"
                     docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
+                    
                 '''
             }
         }  
@@ -80,7 +81,7 @@ pipeline {
     }   
     post {
       always {
-        junit './dev/results.xml'
+        junit '**/codewind-openapi-junit-results.xml'
       }
    }   
 }
