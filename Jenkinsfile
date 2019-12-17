@@ -33,10 +33,12 @@ pipeline {
             }
         } 
         stage('Test') {
-            steps { 
-            	  docker.withTool("default") {
-                def testImage = docker.build("test-image", "./dev") 
-			    testImage.withRun("-v /var/run/docker.sock:/var/run/docker.sock -v ./dev:/development test-image")
+            steps {
+              script {
+            	    docker.withTool("default") {
+                  def testImage = docker.build("test-image", "./dev") 
+			      testImage.withRun("-v /var/run/docker.sock:/var/run/docker.sock -v ./dev:/development test-image")
+			    }
 			  }
             }
         }  
