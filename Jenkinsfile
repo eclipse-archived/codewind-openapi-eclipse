@@ -15,20 +15,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    println("Starting codewind-openapi-eclipse build ...")
-                        
-                    def sys_info = sh(script: "uname -a", returnStdout: true).trim()
-                    println("System information: ${sys_info}")
-                    println("JAVE_HOME: ${JAVA_HOME}")
-                    
-                    sh '''
-                        java -version
-                        which java    
-                    '''
                     
                     dir('dev') { sh './gradlew --stacktrace' }
-                }
+                
             }
         } 
         stage('Test') {
