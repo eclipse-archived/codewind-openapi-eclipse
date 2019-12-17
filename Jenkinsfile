@@ -1,7 +1,9 @@
 #!groovy​
 
 pipeline {
-    agent any
+    agent {
+        label "docker-build"
+    }
     
     tools {
         jdk 'oracle-jdk8-latest'
@@ -34,12 +36,10 @@ pipeline {
         } 
         stage('Test') {
             steps {
-              script {
-            	    docker.withTool("default") {
-                  def testImage = docker.build("test-image", "./dev") 
-			      testImage.withRun("-v /var/run/docker.sock:/var/run/docker.sock -v ./dev:/development test-image")
-			    }
-			  }
+                sh '''#!/usr/bin/env bash
+                    docker build --no-cache -t test-image ./dev
+                    docker run -v /var/run/docker.sock:/var/run/docker.sock -v ./dev:/development test-image
+                '''
             }
         }  
         stage('Deploy') {
