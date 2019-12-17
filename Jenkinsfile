@@ -81,7 +81,7 @@ pipeline {
     }   
     post {
       always {
-        junit '**/codewind-openapi-junit-results.xml'
+        junit 'dev/codewind-openapi-junit-results.xml'
       }
    }   
 }
