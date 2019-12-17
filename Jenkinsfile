@@ -24,7 +24,8 @@ pipeline {
             steps {
                 sh '''#!/usr/bin/env bash
                     docker build --no-cache -t test-image ./dev
-                    docker run -v /var/run/docker.sock:/var/run/docker.sock -v ./dev:/development test-image
+                    CWD=$(pwd)
+                    docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(CWD)/dev:/development test-image
                 '''
             }
         }  
