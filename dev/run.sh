@@ -28,8 +28,8 @@ xvfb-run ./runTest.sh
 
 return_code=$?
 
-echo "Copying test result to /development/codewind-openapi-junit-results.xml"
-cp /tmp/results.xml /development/codewind-openapi-junit-results.xml
+echo "Copying test result to /development/codewindOpenapiJunitResults.xml"
+cp /tmp/results.xml /development/codewindOpenapiJunitResults.xml
 
 echo "Test finished with return code $return_code"
 return $return_code

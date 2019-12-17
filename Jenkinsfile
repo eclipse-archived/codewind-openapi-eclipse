@@ -27,14 +27,13 @@ pipeline {
                     export CWD=$(pwd)
                     echo "Current directory is ${CWD}"
                     docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
-                    
                 '''
             }
         }  
         stage('Deploy') {
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
-                    println("Deploying codewind-openapi-eclipse to downoad area...")
+                    println("Deploying codewind-openapi-eclipse to download area...")
                   
                     sh '''
                         export REPO_NAME="codewind-openapi-eclipse"
@@ -81,7 +80,7 @@ pipeline {
     }   
     post {
       always {
-        junit 'dev/codewind-openapi-junit-results.xml'
+        junit 'dev/codewindOpenapiJunitResults.xml'
       }
    }   
 }
