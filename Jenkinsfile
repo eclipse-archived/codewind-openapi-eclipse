@@ -91,7 +91,7 @@ pipeline {
            echo "move codewindOpenapiJunitResults.xml file"
            mv dev/codewindOpenapiJunitResults.xml codewindOpenapiJunitResults.xml
         '''
-        junit 'codewindOpenapiJunitResults.xml'
+        
       }
    }   
 }
