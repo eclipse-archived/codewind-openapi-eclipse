@@ -77,22 +77,6 @@ pipeline {
             }
         }    
            
-    }   
-    post {
-      always {
-        sh '''#!/usr/bin/env bash
-           # Docker system prune
-           echo "Docker system prune ..."
-           docker system df
-           docker system prune -a --volumes -f
-           docker builder prune -a -f
-           docker system df
-           df -lh
-           echo "move codewindOpenapiJunitResults.xml file"
-           mv dev/codewindOpenapiJunitResults.xml codewindOpenapiJunitResults.xml
-        '''
-        junit 'codewindOpenapiJunitResults.xml'
-      }
-   }   
+    }  
 }
 
