@@ -88,8 +88,9 @@ pipeline {
            docker builder prune -a -f
            docker system df
            df -lh
-           echo "move codewindOpenapiJunitResults.xml file"
-           mv dev/codewindOpenapiJunitResults.xml codewindOpenapiJunitResults.xml
+           # echo "move codewindOpenapiJunitResults.xml file"
+           # mv dev/codewindOpenapiJunitResults.xml codewindOpenapiJunitResults.xml
+           ls -la
         '''
         
       }
