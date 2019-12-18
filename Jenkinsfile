@@ -88,10 +88,6 @@ pipeline {
            docker builder prune -a -f
            docker system df
            df -lh
-           
-           ls -la
-           ls -la dev
-           
         '''
         
       }
