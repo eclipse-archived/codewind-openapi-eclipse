@@ -90,6 +90,7 @@ pipeline {
            df -lh
            
            ls -la
+           ls -la dev
            
         '''
         
