@@ -19,10 +19,6 @@ fi
 
 export ADDITIONAL_ENV_VARS="-Duser.timezone=America/Toronto  $ADDITIONAL_ENV_VARS"
 
-if [ "$run_on_ui_thread" == "true" ]; then
-	export APPLICATION_TYPE=org.eclipse.test.uitestapplication
-fi
-
 echo TEST CLASS NAME is $TEST_CLASS_NAME
 echo TEST PLUG-IN NAME is $TEST_PLUGIN_NAME
 echo APPLICATION_TYPE is $APPLICATION_TYPE
@@ -54,7 +50,7 @@ $ADDITIONAL_ENV_VARS \
 -application $APPLICATION_TYPE  \
 -data /tmp/workspace-location  \
 -testPluginName $TEST_PLUGIN_NAME  \
--className $TEST_CLASS_NAME formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/tmp/results.xml  \
+-className $TEST_CLASS_NAME formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/development/junit-results.xml  \
 -vmargs  \
 -Xms256m  \
 -Xmx1024m  \
