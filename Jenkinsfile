@@ -1,11 +1,13 @@
 #!groovy​
 
 pipeline {
-    agent any
-    
-    tools {
-        jdk 'oracle-jdk8-latest'
+    agent {
+        label "docker-build"
     }
+
+    // tools {
+    //     jdk 'oracle-jdk8-latest'
+    // }
     
     options {
         timestamps() 
