@@ -47,6 +47,8 @@ pipeline {
                         export BUILD_INFO="build_info.properties"
                         export sshHost="genie.codewind@projects-storage.eclipse.org"
                         export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
+
+                        rm $OUTPUT_DIR/$REPO_NAME-test-*.zip
                     
                         if [ -z $CHANGE_ID ]; then
                             UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
