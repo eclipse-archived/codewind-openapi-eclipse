@@ -5,10 +5,6 @@ pipeline {
         label "docker-build"
     }
 
-    // tools {
-    //     jdk 'oracle-jdk8-latest'
-    // }
-    
     options {
         timestamps() 
         skipStagesAfterUnstable()
