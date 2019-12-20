@@ -36,7 +36,7 @@ pipeline {
             }
         } 
 
-        tage('Test') {
+        stage('Test') {
             steps {
                 script {
                     sh '''#!/usr/bin/env bash
