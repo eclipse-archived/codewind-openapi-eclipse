@@ -31,11 +31,28 @@ pipeline {
                     
                     dir('dev') { 
                         sh './gradlew --stacktrace' 
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
         } 
+
+        tage('Test') {
+            steps {
+                script {
+                    sh '''#!/usr/bin/env bash
+                        docker build --no-cache -t test-image ./dev
+                        export CWD=$(pwd)
+                        echo "Current directory is ${CWD}"
+                        docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
+
+                        rm $WORKSPACE/dev/ant_build/artifacts/$REPO_NAME-test-*.zip
+                     '''
+                    dir('dev') { 
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
+                    }
+                }
+            }
+        }  
         
         stage('Deploy') {
             // This when clause disables PR build uploads; you may comment this out if you want your build uploaded.
@@ -70,8 +87,6 @@ pipeline {
                         export sshHost="genie.codewind@projects-storage.eclipse.org"
                         export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
 
-                        rm $OUTPUT_DIR/$REPO_NAME-test-*.zip
-                    
                         if [ -z $CHANGE_ID ]; then
                             UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
                             BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
@@ -103,5 +118,19 @@ pipeline {
                 }
             }
         }       
-    }    
+    } 
+
+    post {
+        always {
+            sh '''#!/usr/bin/env bash
+            # Docker system prune
+            echo "Docker system prune ..."
+            docker system df
+            docker system prune -a --volumes -f
+            docker builder prune -a -f
+            docker system df
+            df -lh
+            '''
+        }
+    }      
 }
