@@ -45,8 +45,8 @@ pipeline {
                         echo "Current directory is ${CWD}"
                         docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
 
-                        rm $WORKSPACE/dev/ant_build/artifacts/$REPO_NAME-test-*.zip
-                     '''
+                        rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
+                    '''
                     dir('dev') { 
                         stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
@@ -123,13 +123,13 @@ pipeline {
     post {
         always {
             sh '''#!/usr/bin/env bash
-            # Docker system prune
-            echo "Docker system prune ..."
-            docker system df
-            docker system prune -a --volumes -f
-            docker builder prune -a -f
-            docker system df
-            df -lh
+                # Docker system prune
+                echo "Docker system prune ..."
+                docker system df
+                docker system prune -a --volumes -f
+                docker builder prune -a -f
+                docker system df
+                df -lh
             '''
         }
     }      
