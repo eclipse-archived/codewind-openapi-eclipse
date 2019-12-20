@@ -29,16 +29,37 @@ pipeline {
                         which java    
                     '''
                     
-                    dir('dev') { sh './gradlew --stacktrace' }
+                    dir('dev') { 
+                        sh './gradlew --stacktrace' 
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
+                    }
                 }
             }
         } 
         
         stage('Deploy') {
+            // This when clause disables PR build uploads; you may comment this out if you want your build uploaded.
+            when {
+                beforeAgent true
+                not {
+                    changeRequest()
+                }
+            }
+
+            options {
+                skipDefaultCheckout()
+            }
+
+            agent any
+
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
-                  
+                    
+                    dir("$WORKSPACE/dev") {
+                        unstash 'codewind-openapi-eclipse-zip'
+                    }
+                    
                     sh '''
                         export REPO_NAME="codewind-openapi-eclipse"
                         export OUTPUT_NAME="codewind-openapi-eclipse"
