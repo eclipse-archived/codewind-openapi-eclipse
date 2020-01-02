@@ -35,6 +35,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                  try {
                     sh '''#!/usr/bin/env bash
                         docker build --no-cache -t test-image ./dev
                         export CWD=$(pwd)
@@ -43,6 +44,9 @@ pipeline {
 
                         rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
                     '''
+                    } finally {
+                      junit 'dev/junit-results.xml'
+                    }
                     dir('dev') { 
                         stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
