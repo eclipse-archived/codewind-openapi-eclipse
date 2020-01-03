@@ -45,13 +45,26 @@ pipeline {
                         rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
                     '''
                     } finally {
-                      junit 'dev/junit-results.xml'
+                        junit 'dev/junit-results.xml'
                     }
                     dir('dev') { 
                         stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
+            post {
+                always {
+                    sh '''#!/usr/bin/env bash
+                        # Docker system prune
+                        echo "Docker system prune ..."
+                        docker system df
+                        docker system prune -a --volumes -f
+                        docker builder prune -a -f
+                        docker system df
+                        df -lh
+                    '''
+                }
+            }      
         }  
         
         stage('Deploy') {
@@ -119,18 +132,4 @@ pipeline {
             }
         }       
     } 
-
-    post {
-        always {
-            sh '''#!/usr/bin/env bash
-                # Docker system prune
-                echo "Docker system prune ..."
-                docker system df
-                docker system prune -a --volumes -f
-                docker builder prune -a -f
-                docker system df
-                df -lh
-            '''
-        }
-    }      
 }
