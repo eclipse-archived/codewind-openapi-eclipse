@@ -24,11 +24,11 @@ pipeline {
                         which java    
                     '''
                     
-                    dir('dev') { 
+                    dir('dev/ant_build/artifacts') { 
                         sh './gradlew --stacktrace' 
-                        stash name: 'codewind-openapi-eclipse-test.zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-test-*.zip'
-                        sh 'rm ./ant_build/artifacts/codewind-openapi-eclipse-test-*.zip' 
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
+                        stash name: 'codewind-openapi-eclipse-test.zip', includes: 'codewind-openapi-eclipse-test-*.zip'
+                        sh 'rm ./codewind-openapi-eclipse-test-*.zip' 
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -38,16 +38,11 @@ pipeline {
             agent {
                 label "docker-build"
             }
-
-            when {
-                beforeAgent true
-                changeRequest()
-            }
-            
+        
             steps {
                 script {
                     try {
-                        dir('$WORKSPACE/dev/ant_build/artifacts') { 
+                        dir('dev/ant_build/artifacts') { 
                             unstash 'codewind-openapi-eclipse-test.zip'
                             unstash 'codewind-openapi-eclipse-zip'
                         }
@@ -63,8 +58,8 @@ pipeline {
                     } finally {
                         junit 'dev/junit-results.xml'
                     }
-                    dir('dev') { 	
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
+                    dir('dev/ant_build/artifacts') { 	
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -100,7 +95,7 @@ pipeline {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
                     
-                    dir("$WORKSPACE/dev") {
+                    dir("$WORKSPACE/dev/ant_build/artifacts") {
                         unstash 'codewind-openapi-eclipse-zip'
                     }
                     
