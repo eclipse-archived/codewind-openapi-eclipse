@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir('dev/ant_build/artifacts') { 
+                        dir('$WORKSPACE/dev/ant_build/artifacts') { 
                             unstash 'codewind-openapi-eclipse-test.zip'
                             unstash 'codewind-openapi-eclipse-zip'
                         }
@@ -58,6 +58,8 @@ pipeline {
                     } finally {
                         junit 'dev/junit-results.xml'
                     }
+                    dir('dev') { 	
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                 }
             }
             post {
