@@ -60,6 +60,7 @@ pipeline {
                     }
                     dir('dev') { 	
                         stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
+                    }
                 }
             }
             post {
