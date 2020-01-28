@@ -27,9 +27,7 @@ pipeline {
                     dir('dev') { 
                         sh './gradlew --stacktrace' 
                         stash name: 'codewind-openapi-eclipse-test.zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-test-*.zip'
-                        delete fileTree('ant_build/artifacts') { 
-                            include 'codewind-openapi-eclipse-test-*.zip' 
-                        }
+                        sh 'rm ./ant_build/artifacts/codewind-openapi-eclipse-test-*.zip' 
                         stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
