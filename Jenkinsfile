@@ -1,9 +1,8 @@
 #!groovy​
 
 pipeline {
-    agent {
-        label "docker-build"
-    }
+
+    agent any
 
     options {
         timestamps() 
@@ -33,6 +32,10 @@ pipeline {
         } 
 
         stage('Test') {
+            agent {
+                label "docker-build"
+            }
+
             steps {
                 script {
                   try {
@@ -79,9 +82,7 @@ pipeline {
             options {
                 skipDefaultCheckout()
             }
-
-            agent any
-
+            
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
