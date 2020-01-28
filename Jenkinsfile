@@ -42,17 +42,19 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir('dev/ant_build/artifacts') { 
+                        dir('/development/ant_build/artifacts') { 
                             unstash 'codewind-openapi-eclipse-test.zip'
+                            unstash 'codewind-openapi-eclipse-zip'
                         }
 
                         sh '''#!/usr/bin/env bash
                             docker build --no-cache -t test-image ./dev
                             export CWD=$(pwd)
                             echo "Current directory is ${CWD}"
+                            ///home/root/workspace/_codewind-openapi-eclipse_testSJ
                             docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
 
-                            rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
+                            rm /development/ant_build/artifacts/codewind-openapi-eclipse-*.zip
                         '''
                     } finally {
                         junit 'dev/junit-results.xml'
