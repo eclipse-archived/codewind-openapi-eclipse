@@ -26,6 +26,9 @@ pipeline {
                     
                     dir('dev') { 
                         sh './gradlew --stacktrace' 
+                        stash name: 'codewind-openapi-eclipse-test.zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-test-*.zip'
+                        rm ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -39,6 +42,10 @@ pipeline {
             steps {
                 script {
                   try {
+                    dir('dev/ant_build/artifacts') { 
+                        unstash 'codewind-openapi-eclipse-test.zip'
+                    }
+
                     sh '''#!/usr/bin/env bash
                         docker build --no-cache -t test-image ./dev
                         export CWD=$(pwd)
@@ -49,9 +56,6 @@ pipeline {
                     '''
                     } finally {
                         junit 'dev/junit-results.xml'
-                    }
-                    dir('dev') { 
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -82,19 +86,19 @@ pipeline {
             options {
                 skipDefaultCheckout()
             }
-            
+
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
                     
-                    dir("$WORKSPACE/dev") {
+                    dir("dev") {
                         unstash 'codewind-openapi-eclipse-zip'
                     }
                     
                     sh '''
                         export REPO_NAME="codewind-openapi-eclipse"
                         export OUTPUT_NAME="codewind-openapi-eclipse"
-                        export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
+                        export OUTPUT_DIR="dev/ant_build/artifacts"
                         export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME"
                         export LATEST_DIR="latest"
                         export BUILD_INFO="build_info.properties"
