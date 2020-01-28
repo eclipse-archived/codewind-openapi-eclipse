@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir('$WORKSPACE/dev/ant_build/artifacts') { 
+                        dir('dev/ant_build/artifacts') { 
                             unstash 'codewind-openapi-eclipse-test.zip'
                             unstash 'codewind-openapi-eclipse-zip'
                         }
@@ -92,14 +92,14 @@ pipeline {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
                     
-                    dir("dev") {
+                    dir("$WORKSPACE/dev") {
                         unstash 'codewind-openapi-eclipse-zip'
                     }
                     
                     sh '''
                         export REPO_NAME="codewind-openapi-eclipse"
                         export OUTPUT_NAME="codewind-openapi-eclipse"
-                        export OUTPUT_DIR="dev/ant_build/artifacts"
+                        export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
                         export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME"
                         export LATEST_DIR="latest"
                         export BUILD_INFO="build_info.properties"
