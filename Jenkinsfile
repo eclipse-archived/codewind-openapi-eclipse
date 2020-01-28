@@ -39,6 +39,11 @@ pipeline {
                 label "docker-build"
             }
 
+            when {
+                beforeAgent true
+                changeRequest()
+            }
+            
             steps {
                 script {
                     try {
