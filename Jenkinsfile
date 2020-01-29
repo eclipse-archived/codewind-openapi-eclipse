@@ -1,9 +1,8 @@
 #!groovy​
 
 pipeline {
-    agent {
-        label "docker-build"
-    }
+
+    agent any
 
     options {
         timestamps() 
@@ -28,27 +27,36 @@ pipeline {
                     dir('dev') { 
                         sh './gradlew --stacktrace' 
                     }
+                    dir('dev/ant_build/artifacts') { 
+                        stash name: 'codewind-openapi-eclipse-test.zip', includes: 'codewind-openapi-eclipse-test-*.zip'
+                        sh 'rm codewind-openapi-eclipse-test-*.zip' 
+                        stash name: 'codewind-openapi-eclipse-zip', includes: 'codewind-openapi-eclipse-*.zip'
+                    }
                 }
             }
         } 
 
         stage('Test') {
+            agent {
+                label "docker-build"
+            }
+        
             steps {
                 script {
-                  try {
-                    sh '''#!/usr/bin/env bash
-                        docker build --no-cache -t test-image ./dev
-                        export CWD=$(pwd)
-                        echo "Current directory is ${CWD}"
-                        docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
+                    try {
+                        dir('dev/ant_build/artifacts') { 
+                            unstash 'codewind-openapi-eclipse-test.zip'
+                            unstash 'codewind-openapi-eclipse-zip'
+                        }
 
-                        rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
-                    '''
+                        sh '''#!/usr/bin/env bash
+                            docker build --no-cache -t test-image ./dev
+                            export CWD=$(pwd)
+                            echo "Current directory is ${CWD}"
+                            docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
+                        '''
                     } finally {
                         junit 'dev/junit-results.xml'
-                    }
-                    dir('dev') { 
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'ant_build/artifacts/codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -63,6 +71,7 @@ pipeline {
                         docker system df
                         df -lh
                     '''
+                    deleteDir()
                 }
             }      
         }  
@@ -80,13 +89,11 @@ pipeline {
                 skipDefaultCheckout()
             }
 
-            agent any
-
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
                     println("Deploying codewind-openapi-eclipse to downoad area...")
                     
-                    dir("$WORKSPACE/dev") {
+                    dir("$WORKSPACE/dev/ant_build/artifacts") {
                         unstash 'codewind-openapi-eclipse-zip'
                     }
                     
