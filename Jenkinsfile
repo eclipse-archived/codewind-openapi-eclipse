@@ -54,14 +54,9 @@ pipeline {
                             export CWD=$(pwd)
                             echo "Current directory is ${CWD}"
                             docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
-
-                            rm $WORKSPACE/dev/ant_build/artifacts/codewind-openapi-eclipse-test-*.zip
                         '''
                     } finally {
                         junit 'dev/junit-results.xml'
-                    }
-                    dir('dev/ant_build/artifacts') { 	
-                        stash name: 'codewind-openapi-eclipse-zip', includes: 'codewind-openapi-eclipse-*.zip'
                     }
                 }
             }
@@ -76,6 +71,7 @@ pipeline {
                         docker system df
                         df -lh
                     '''
+                    deleteDir()
                 }
             }      
         }  
