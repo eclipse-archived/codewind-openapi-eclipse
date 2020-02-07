@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 IBM Corporation and others.
+ * Copyright (c) 2019, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ public abstract class AbstractOpenApiGeneratorCommand extends WorkspaceModifyOpe
 	protected String language = null;
 	protected String generatorType = null;
 	protected boolean pomFileExists = false;
+	protected String codewindProjectTypeId = null;
 	
 	public AbstractOpenApiGeneratorCommand() {
 		// empty
@@ -78,6 +79,10 @@ public abstract class AbstractOpenApiGeneratorCommand extends WorkspaceModifyOpe
 	
 	public void setGeneratorType(String generatorType) {
 		this.generatorType = generatorType;
+	}
+	
+	public void setCodewindProjectTypeId(String codewindProjectTypeId) {
+		this.codewindProjectTypeId = codewindProjectTypeId;
 	}
 	
 	public void setOutputFolderString(String outputFolderString) {
