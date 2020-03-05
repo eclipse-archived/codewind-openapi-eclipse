@@ -71,7 +71,6 @@ pipeline {
                         docker system df
                         df -lh
                     '''
-                    deleteDir()
                 }
             }      
         }  
