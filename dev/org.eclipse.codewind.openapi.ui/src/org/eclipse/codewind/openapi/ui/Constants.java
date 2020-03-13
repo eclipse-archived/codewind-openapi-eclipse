@@ -50,7 +50,7 @@ public class Constants {
         {"Apex", "apex"},
         {"Bash", "bash"},
         {"C", "c"},
-        {"C#", "csharp", "csharp-dotnet2", "csharp-refactor"},
+        {"C#", "csharp", "csharp-dotnet2", "csharp-refactor", "csharp-netcore"},
         {"C++", "cpp-qt5", "cpp-restsdk", "cpp-tizen"},
         {"Dart", "dart", "dart-jaguar"},
         {"Eiffel", "eiffel"},
