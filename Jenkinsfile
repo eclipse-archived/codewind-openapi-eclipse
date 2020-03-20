@@ -53,7 +53,7 @@ pipeline {
                             docker build --no-cache -t test-image ./dev
                             export CWD=$(pwd)
                             echo "Current directory is ${CWD}"
-                            docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
+                            docker run --user "$(id -u):$(id -g)" -v /etc/passwd:/etc/passwd:ro -v /var/run/docker.sock:/var/run/docker.sock -v ${CWD}/dev:/development test-image
                         '''
                     } finally {
                         junit 'dev/junit-results.xml'
