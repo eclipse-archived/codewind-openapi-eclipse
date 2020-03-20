@@ -73,9 +73,7 @@ pipeline {
 
                         export CWD=$(pwd)
                         echo "DEBUG: Current directory is ${CWD}"
-                        chmod -R 777 ${CWD}
                     '''
-                    cleanWs()
                 }
             }      
         }  
