@@ -70,10 +70,9 @@ pipeline {
                         docker builder prune -a -f
                         docker system df
                         df -lh
-
-                        export CWD=$(pwd)
-                        echo "DEBUG: Current directory is ${CWD}"
                     '''
+                    echo 'Clean up workspace'	
+                    deleteDir() /* clean up our workspace */
                 }
             }      
         }  
