@@ -12,10 +12,10 @@ echo "Unzipping features..."
 cd /development/ant_build/artifacts/
 
 unzip codewind-openapi-eclipse-0*.zip -d code
-chmod -R 777 code
+chmod -R 755 code
 
 unzip codewind-openapi-eclipse-test*.zip -d test
-chmod -R 777 test
+chmod -R 755 test
 
 cd /home
 
