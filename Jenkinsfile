@@ -36,7 +36,7 @@ pipeline {
             }
         } 
 
-        stage('Test') {
+        stage('Test on docker agent') {
             agent {
                 label "docker-build"
             }
