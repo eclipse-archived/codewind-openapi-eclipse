@@ -92,7 +92,7 @@ pipeline {
 
             steps {
                 sshagent ( ['projects-storage.eclipse.org-bot-ssh']) {
-                    println("Deploying codewind-openapi-eclipse to downoad area...")
+                    println("Deploying codewind-openapi-eclipse to archive area...")
                     
                     dir("$WORKSPACE/dev/ant_build/artifacts") {
                         unstash 'codewind-openapi-eclipse-zip'
@@ -102,15 +102,15 @@ pipeline {
                         export REPO_NAME="codewind-openapi-eclipse"
                         export OUTPUT_NAME="codewind-openapi-eclipse"
                         export OUTPUT_DIR="$WORKSPACE/dev/ant_build/artifacts"
-                        export DOWNLOAD_AREA_URL="https://download.eclipse.org/codewind/$REPO_NAME"
+                        export ARCHIVE_AREA_URL="https://archive.eclipse.org/codewind/$REPO_NAME"
                         export LATEST_DIR="latest"
                         export BUILD_INFO="build_info.properties"
                         export sshHost="genie.codewind@projects-storage.eclipse.org"
-                        export deployDir="/home/data/httpd/download.eclipse.org/codewind/$REPO_NAME"
+                        export deployDir="/home/data/httpd/archive.eclipse.org/codewind/$REPO_NAME"
 
                         if [ -z $CHANGE_ID ]; then
                             UPLOAD_DIR="$GIT_BRANCH/$BUILD_ID"
-                            BUILD_URL="$DOWNLOAD_AREA_URL/$UPLOAD_DIR"
+                            BUILD_URL="$ARCHIVE_AREA_URL/$UPLOAD_DIR"
                   
                             ssh $sshHost rm -rf $deployDir/$GIT_BRANCH/$LATEST_DIR
                             ssh $sshHost mkdir -p $deployDir/$GIT_BRANCH/$LATEST_DIR
