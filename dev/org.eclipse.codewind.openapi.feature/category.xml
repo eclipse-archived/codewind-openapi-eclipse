@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.codewind.openapi.feature_0.12.0.qualifier.jar" id="org.eclipse.codewind.openapi.feature" version="0.12.0.qualifier">
+   <feature url="features/org.eclipse.codewind.openapi.feature_0.13.0.qualifier.jar" id="org.eclipse.codewind.openapi.feature" version="0.13.0.qualifier">
       <category name="org.eclipse.codewind.openapi.category"/>
    </feature>
    <category-def name="org.eclipse.codewind.openapi.category" label="OpenAPI Tools"/>
