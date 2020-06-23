@@ -78,9 +78,9 @@ def openApiCliFile = file(projDir + project.properties['codewind.core.prereqlib.
 
 def filePrefix = "codewind-openapi-eclipse"
 
-def swtBotEclipseFinderFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.eclipse.finder_2.8.0.201906121535.jar')
-def swtBotJunitFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.junit4_x_2.8.0.201906121535.jar')
-def swtBotSwtFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.swt.finder_2.8.0.201906121535.jar')
+def swtBotEclipseFinderFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.eclipse.finder_3.0.0.202006031738.jar')
+def swtBotJunitFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.junit4_x_3.0.0.202006031738.jar')
+def swtBotSwtFile = file(projDir + project.properties['eclipse.target.platform.ies.folder'] + '/eclipse/dropins/plugins/org.eclipse.swtbot.swt.finder_3.0.0.202006031738.jar')
 
 
 
@@ -115,19 +115,19 @@ task downloadOpenApiCli(type: Download) {
 
 task downloadSWTBotEclipseFinderJar(type: Download) {
     println("Downloading SWTBot Eclipse Finder jar")
-    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.eclipse.finder_2.8.0.201906121535.jar'
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.eclipse.finder_3.0.0.202006031738.jar'
     target=swtBotEclipseFinderFile
 }
 
 task downloadSWTBotJunitJar(type: Download) {
     println("Downloading SWTBot Junit jar")
-    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.junit4_x_2.8.0.201906121535.jar'
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.junit4_x_3.0.0.202006031738.jar'
     target=swtBotJunitFile
 }
 
 task downloadSWTBotSwtJar(type: Download) {
     println("Downloading SWTBot SWT jar")
-    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.swt.finder_2.8.0.201906121535.jar'
+    sourceUrl='http://download.eclipse.org/technology/swtbot/releases/latest/plugins/org.eclipse.swtbot.swt.finder_3.0.0.202006031738.jar'
     target=swtBotSwtFile
 }
 
