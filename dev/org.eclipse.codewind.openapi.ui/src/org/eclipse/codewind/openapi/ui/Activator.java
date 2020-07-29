@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.osgi.service.debug.DebugOptionsListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -78,6 +79,21 @@ public class Activator extends AbstractUIPlugin {
 			return imageDescriptorFromPlugin;
 		}
 		return descriptor;
+	}
+	
+	public static Image getImage(String path) {
+		ImageRegistry imageRegistry = plugin.getImageRegistry();
+		ImageDescriptor descriptor = imageRegistry.getDescriptor(path);		
+		if (descriptor == null) {
+			descriptor = imageDescriptorFromPlugin(PLUGIN_ID, path);
+			imageRegistry.put(path, descriptor);
+		}
+		Image image = imageRegistry.get(path + "_IMG");
+		if (image == null) {
+			image = descriptor.createImage();
+			imageRegistry.put(path + "_IMG", image);
+		}
+		return image;
 	}
 	
 	public static void log(int severity, String message) {
